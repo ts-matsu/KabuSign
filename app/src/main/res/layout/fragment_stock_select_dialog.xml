@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="java.util.List"/>
+        <variable
+            name="viewModel"
+            type="net.ts_matsu.kabusign.viewmodel.StockSelectViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/svStockSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/stock_select_hint"
+            android:onQueryTextChange="@{(text) -> viewModel.onQueryTextChange(text)}"/>
+
+        <net.ts_matsu.kabusign.view.StockSelectListView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginTop="8dp"
+            app:list="@{viewModel.stockList}"
+            android:onItemClick="@{(parent, view, position, id) -> viewModel.onItemClick((String)parent.getItemAtPosition(position))}" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+            <!--  DialogFragment は、どうも各部品のサイズに抑え込んで要るっぽい  -->
+            <!-- 以下のViewを入れることで、なぜか最大サイズになってくれる -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:background="#00000000"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"
+                android:onClick="@{() -> viewModel.onNegativeButtonClick()}"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

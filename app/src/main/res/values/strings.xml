@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">KabuSign</string>
+    <string name="stock_select_hint">銘柄コード、銘柄名</string>
+    <string name="monitored_stock_title">監視銘柄リスト</string>
+    <string name="label_price_designation">価格指定</string>
+
+    <string name="label_reference_designation">基準値差分指定</string>
+    <string name="label_reference">基準値</string>
+    <string-array name="reference_kind">
+        <item>現在値</item>
+        <item>前日終値</item>
+        <item>前日始値</item>
+        <item>前日高値</item>
+        <item>前日安値</item>
+    </string-array>
+
+    <string name="label_target_price">差分価格</string>
+    <string name="label_target_ratio">差分比率</string>
+
+    <string name="price_designation_message_prefix">基準値から、</string>
+    <string name="price_designation_message_suffix">円になったら通知</string>
+
+    <string name="hint_input">タップしてください</string>
+
+    <string name="candle_style_title"><u>ローソク足の形状</u></string>
+    <string name="candle_body_title">形状</string>
+    <string-array name="candle_body_info">
+        <item>指定しない</item>
+        <item>陽線(大)</item>
+        <item>陽線(中)</item>
+        <item>陽線(小)</item>
+        <item>陰線(大)</item>
+        <item>陰線(中)</item>
+        <item>陰線(小)</item>
+        <item>十字線</item>
+    </string-array>
+    <string name="candle_shadows_title">ヒゲ</string>
+    <string-array name="candle_shadows_info">
+        <item>指定しない</item>
+        <item>上ヒゲ(短)  /  下ヒゲ(短)</item>
+        <item>上ヒゲ(短)  /  下ヒゲ(中)</item>
+        <item>上ヒゲ(短)  /  下ヒゲ(長)</item>
+        <item>上ヒゲ(短)  /  下ヒゲ(無)</item>
+        <item>上ヒゲ(中)  /  下ヒゲ(短)</item>
+        <item>上ヒゲ(中)  /  下ヒゲ(中)</item>
+        <item>上ヒゲ(中)  /  下ヒゲ(長)</item>
+        <item>上ヒゲ(中)  /  下ヒゲ(無)</item>
+        <item>上ヒゲ(長)  /  下ヒゲ(短)</item>
+        <item>上ヒゲ(長)  /  下ヒゲ(中)</item>
+        <item>上ヒゲ(長)  /  下ヒゲ(長)</item>
+        <item>上ヒゲ(長)  /  下ヒゲ(無)</item>
+        <item>上ヒゲ(無)  /  下ヒゲ(短)</item>
+        <item>上ヒゲ(無)  /  下ヒゲ(中)</item>
+        <item>上ヒゲ(無)  /  下ヒゲ(長)</item>
+        <item>上ヒゲ(無)  /  下ヒゲ(無)</item>
+    </string-array>
+    <string name="candle_value_title"><u>ローソク足の値</u></string>
+    <string name="candle_open_title">始値</string>
+    <string name="candle_close_title">終値</string>
+    <string name="candle_high_title">高値</string>
+    <string name="candle_low_title">安値</string>
+    <string-array name="value_attr">
+        <item>指定しない</item>
+        <item>に等しい</item>
+        <item>以上</item>
+        <item>以下</item>
+        <item>より大きい</item>
+        <item>より小さい</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

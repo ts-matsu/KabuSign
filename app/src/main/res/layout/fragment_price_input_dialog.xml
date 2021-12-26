@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="net.ts_matsu.kabusign.viewmodel.library.PriceInputViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="293dp"
+            android:layout_height="76dp"
+            android:gravity="right|center"
+            android:paddingRight="8dp"
+            android:fontFamily="@font/rounded_mgenplus_1c_bold"
+            android:background="@color/colorDarkNavy"
+            android:textSize="36sp"
+            android:textColor="@color/colorWhite"
+            android:text="@{viewModel.designationPrice}"/>
+
+        <TableLayout
+            android:id="@+id/tlPriceInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorDarkNavy">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+                <Button
+                    android:id="@+id/btValue1"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="１"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(1)}"/>
+                <Button
+                    android:id="@+id/btValue2"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="２"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(2)}"/>
+                <Button
+                    android:id="@+id/btValue3"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="３"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(3)}"/>
+                <Button
+                    android:id="@+id/btValueClear"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="C"
+                    android:onClick="@{() -> viewModel.onClearClick()}"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+                <Button
+                    android:id="@+id/btValue4"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="４"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(4)}"/>
+                <Button
+                    android:id="@+id/btValue5"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="５"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(5)}"/>
+                <Button
+                    android:id="@+id/btValue6"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="６"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(6)}"/>
+                <ImageButton
+                    android:id="@+id/btValueDel"
+                    android:src="@drawable/ic_baseline_backspace_24"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:background="@color/colorPriceValueButton"
+                    android:onClick="@{() -> viewModel.onDeleteClick()}"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+                <Button
+                    android:id="@+id/btValue7"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="７"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(7)}"/>
+                <Button
+                    android:id="@+id/btValue8"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="８"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(8)}"/>
+                <Button
+                    android:id="@+id/btValue9"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="９"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(9)}"/>
+                <Button
+                    android:id="@+id/btValueMinus"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="－"
+                    android:textColor="@{context.getColor(viewModel.minusTextColor)}"
+                    android:onClick="@{() -> viewModel.onMinusClick()}"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+                <Button
+                    android:id="@+id/btValue0"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="０"
+                    android:onClick="@{() -> viewModel.onPriceValueClick(0)}"/>
+                <Button
+                    android:id="@+id/btValueDot"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@{context.getColor(viewModel.dotTextColor)}"
+                    android:text="・"
+                    android:onClick="@{() -> viewModel.onDotClick()}"/>
+                <Button
+                    android:id="@+id/btValueOK"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_span="2"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorPriceValueButton"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPriceValueOk"
+                    android:text="O K"
+                    android:onClick="@{() -> viewModel.onOkClick()}"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</layout>

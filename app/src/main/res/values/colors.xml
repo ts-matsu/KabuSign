@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <color name="colorBlue">#0033FF</color>
+    <color name="colorNavy">#0000AA</color>
+    <color name="colorBlue2">#0077FF</color>
+    <color name="colorRed">#FF3300</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorDarkGray">#303030</color>
+    <color name="colorGray">#505050</color>
+    <color name="colorLightGray">#A0A0A0</color>
+    <color name="colorGreen">#30C030</color>
+    <color name="colorLightGreen">#20C050</color>
+    <color name="colorLightBlue">#3090FF</color>
+    <color name="colorDarkNavy">#000055</color>
+    <color name="colorOrange">#ffaa00</color>
+
+    <color name="colorCandleSkyBlue">#FF00AAFF</color>
+    <color name="colorCandleRed">#ffff3300</color>
+
+    <color name="colorPriceValueButton">#F0F0F0</color>
+    <color name="colorPriceValueTableBG">#B0B0B0</color>
+    <color name="colorPriceValueTextBG">#505050</color>
+    <color name="colorPriceValueOk">#30C0B0</color>
+</resources>

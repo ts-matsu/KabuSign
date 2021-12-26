@@ -1,0 +1,2 @@
+rootProject.name='KabuSign'
+include ':app'
