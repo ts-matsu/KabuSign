@@ -53,10 +53,18 @@ class ConditionItemPriceDesignation(number: Int, code: String) : Fragment() {
 
         // 表示色を変更するため、スピナーを切り替える
         viewModel!!.isPriceDesignationMode.observe(viewLifecycleOwner) {
-            CommonInfo.debugInfo("$cName 222  ${viewModel.kindSpinnerPosition.value!!}")
             var adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner, resources.getStringArray(R.array.reference_kind))
             if(it) {
                 adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_off, resources.getStringArray(R.array.reference_kind))
+            }
+            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+            spinner.adapter = adapter
+            spinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+        }
+        viewModel!!.enable.observe(viewLifecycleOwner) {
+            var adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_off, resources.getStringArray(R.array.reference_kind))
+            if(it && !viewModel.isPriceDesignationMode.value!!) {
+                adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner, resources.getStringArray(R.array.reference_kind))
             }
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
             spinner.adapter = adapter

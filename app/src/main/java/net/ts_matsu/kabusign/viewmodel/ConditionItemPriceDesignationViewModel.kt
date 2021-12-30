@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.ts_matsu.kabusign.R
+import net.ts_matsu.kabusign.model.data.DatabaseCache
 import net.ts_matsu.kabusign.model.data.db.entity.PriceDesignationEntity
 import net.ts_matsu.kabusign.util.CommonInfo
 import net.ts_matsu.kabusign.util.ResourceApp
@@ -17,6 +18,7 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
     private val cName = ConditionItemPriceDesignationViewModel::class.java.simpleName
     private val code = _code        // 銘柄コード
     private val number = _number    // 価格指定番号
+    private val databaseCache = DatabaseCache()
     private lateinit var entity: PriceDesignationEntity
 
     enum class DesignationMode {
@@ -84,17 +86,16 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
                 onRequireInputMode(DesignationMode.values()[entity.mode], dbUpdate = false)
                 CommonInfo.debugInfo("$cName init kind:${it.referenceKind}")
                 setPrice(it.designationPrice.toString(), dbUpdate = false)
+                onRequireTargetModeChange(it.differenceKind, dbUpdate = false)
                 setReferencePrice(it.differencePrice.toString(), dbUpdate = false)
                 setReferenceRatio(it.differenceRatio.toString(), dbUpdate = false)
                 onReferenceKindSelected(it.referenceKind, false)
             }
+            // インフォメーションメッセージ更新
+            changeInformationMessage()
+
             CommonInfo.debugInfo("$cName: init end")
         }
-
-        informationMessage.value =
-            ResourceApp.instance.getString(R.string.price_designation_message_prefix) +
-                    "" +
-                    ResourceApp.instance.getString(R.string.price_designation_message_suffix)
     }
 
     private suspend fun initialize(): Boolean {
@@ -126,35 +127,34 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
             CommonInfo.debugInfo("$cName insertData($result)")
         }
     }
-    private suspend fun updateData(data: PriceDesignationEntity) {
-        withContext(Dispatchers.IO) {
-            val dao = ResourceApp.database.priceDesignationDao()
-            dao.update(data)
-        }
+    private fun updateData(data: PriceDesignationEntity) {
+        databaseCache.addPriceDesignationEntity(data)
     }
 
     fun onRequireInputMode(mode: DesignationMode, dbUpdate: Boolean = true){
-        designationMode = mode
-        if(designationMode == DesignationMode.PRICE_DESIGNATION){
-            isPriceDesignationMode.value = true
-            setColorByMode(true)
-        }
-        else {
-            isPriceDesignationMode.value = false
-            setColorByMode(false)
-        }
+        if(enable.value!!){
+            designationMode = mode
+            if(designationMode == DesignationMode.PRICE_DESIGNATION){
+                isPriceDesignationMode.value = true
+                setColorByMode(true)
+            }
+            else {
+                isPriceDesignationMode.value = false
+                setColorByMode(false)
+            }
 
-        if(dbUpdate) {
-            // DB更新
-            entity.mode = mode.ordinal
-            viewModelScope.launch {
+            if(dbUpdate) {
+                // DBキャッシュ更新
+                entity.mode = mode.ordinal
                 updateData(entity)
             }
         }
     }
     fun onRequireInputDialogMode(mode: InputMode){
-        inputMode = mode
-        requireInputDialog.value = true
+        if(enable.value!!) {
+            inputMode = mode
+            requireInputDialog.value = true
+        }
     }
     fun clearInputDialog(){
         requireInputDialog.value = false
@@ -178,13 +178,29 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
             tvDesignationPriceColor.value = R.color.colorLightGray
             rbReferenceDesignationColor.value = R.color.colorWhite
             tvReferenceLabelColor.value = R.color.colorWhite
-            tvTargetPriceColor.value = R.color.colorBlack
-            tvTargetRatioColor.value = R.color.colorBlack
             referenceInfoIcon.value = R.drawable.ic_baseline_info_20
             tvReferenceInfoColor.value = R.color.colorBlack
+            onRequireTargetModeChange(inputMode, false)
         }
         enableTargetPriceInput.value = !isPriceDesignationMode.value!! && isTargetPriceMode.value!!
         enableTargetRatioInput.value = !isPriceDesignationMode.value!! && !isTargetPriceMode.value!!
+    }
+
+    private fun setColorAll(enable: Boolean) {
+        if(!enable) {
+            rbPriceDesignationColor.value = R.color.colorGray
+            tvLabelDesignationPriceColor.value = R.color.colorBlue2
+            tvDesignationPriceColor.value = R.color.colorLightGray
+            rbReferenceDesignationColor.value = R.color.colorGray
+            tvReferenceLabelColor.value = R.color.colorBlue2
+            tvTargetPriceColor.value = R.color.colorLightGray
+            tvTargetRatioColor.value = R.color.colorLightGray
+            referenceInfoIcon.value = R.drawable.ic_baseline_info_off_20
+            tvReferenceInfoColor.value = R.color.colorLightGray
+        }
+        else {
+            setColorByMode(isPriceDesignationMode.value!!)
+        }
     }
 
     // 価格指定モード時の価格
@@ -193,11 +209,9 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
             designationPrice.value = "%,d".format(value.toFloat().toInt())
 
             if(dbUpdate) {
-                // DBに値を保存
+                // DBキャッシュに値を保存
                 entity.designationPrice = value.toFloat().toInt()
-                viewModelScope.launch {
-                    updateData(entity)
-                }
+                updateData(entity)
             }
         }
     }
@@ -212,31 +226,51 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
     }
 
     // 基準値差分指定時の価格、比率
-    fun onRequireTargetPriceMode() {
-        isTargetPriceMode.value = true
-        tvTargetPriceColor.value = R.color.colorBlack
-        tvTargetRatioColor.value = R.color.colorLightGray
-        enableTargetPriceInput.value = !isPriceDesignationMode.value!! && isTargetPriceMode.value!!
-        enableTargetRatioInput.value = !isPriceDesignationMode.value!! && !isTargetPriceMode.value!!
+    fun onRequireTargetModeChange(mode: InputMode, dbUpdate: Boolean = true) {
+        if(enable.value!!) {
+            if(mode == InputMode.PRICE_INPUT) {
+                isTargetPriceMode.value = true
+                tvTargetPriceColor.value = R.color.colorBlack
+                tvTargetRatioColor.value = R.color.colorLightGray
+                enableTargetPriceInput.value = !isPriceDesignationMode.value!! && isTargetPriceMode.value!!
+                enableTargetRatioInput.value = !isPriceDesignationMode.value!! && !isTargetPriceMode.value!!
+            }
+            else {
+                isTargetPriceMode.value = false
+                tvTargetPriceColor.value = R.color.colorLightGray
+                tvTargetRatioColor.value = R.color.colorBlack
+                enableTargetPriceInput.value = !isPriceDesignationMode.value!! && isTargetPriceMode.value!!
+                enableTargetRatioInput.value = !isPriceDesignationMode.value!! && !isTargetPriceMode.value!!
+            }
+
+            if(dbUpdate) {
+                // DBキャッシュに値を保存
+                entity.differenceKind = mode.ordinal
+                updateData(entity)
+            }
+            // インフォメーションメッセージ更新
+            changeInformationMessage()
+        }
     }
-    fun onRequireTargetRatioMode() {
-        isTargetPriceMode.value = false
-        tvTargetPriceColor.value = R.color.colorLightGray
-        tvTargetRatioColor.value = R.color.colorBlack
-        enableTargetPriceInput.value = !isPriceDesignationMode.value!! && isTargetPriceMode.value!!
-        enableTargetRatioInput.value = !isPriceDesignationMode.value!! && !isTargetPriceMode.value!!
+    fun onRequireTargetModeChange(mode: Int, dbUpdate: Boolean = true) {
+        var inputMode = InputMode.PRICE_INPUT
+        if(mode != InputMode.PRICE_INPUT.ordinal) {
+            inputMode = InputMode.RATIO_INPUT
+        }
+        onRequireTargetModeChange(inputMode, dbUpdate)
     }
+
     fun setReferencePrice(value: String?, dbUpdate: Boolean = true) {
         value?.let {
             targetPrice.value = "%,d".format(it.toFloat().toInt())
 
             if(dbUpdate) {
-                // DBに値を保存
+                // DBキャッシュに値を保存
                 entity.differencePrice = it.toFloat().toInt()
-                viewModelScope.launch {
-                    updateData(entity)
-                }
+                updateData(entity)
             }
+            // インフォメーションメッセージ更新
+            changeInformationMessage()
         }
     }
     fun getReferencePrice(): String {
@@ -253,12 +287,12 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
             targetRatio.value = it
 
             if(dbUpdate) {
-                // DBに値を保存
+                // DBキャッシュに値を保存
                 entity.differenceRatio = it.toFloat()
-                viewModelScope.launch {
-                    updateData(entity)
-                }
+                updateData(entity)
             }
+            // インフォメーションメッセージ更新
+            changeInformationMessage()
         }
     }
     fun getReferenceRatio(): String {
@@ -276,28 +310,62 @@ class ConditionItemPriceDesignationViewModel(_number: Int, _code: String): ViewM
         return result
     }
     fun onReferenceKindSelected(position: Int, dbUpdate: Boolean) {
-        CommonInfo.debugInfo("$cName onReferenceKindSelected($position), ${kindSpinnerPosition.value}")
-        kindSpinnerPosition.value = position
+        if(enable.value!!) {
+            CommonInfo.debugInfo("$cName onReferenceKindSelected($position), ${kindSpinnerPosition.value}")
+            kindSpinnerPosition.value = position
 
-        // DB の値更新
-        if(dbUpdate){
-            entity.referenceKind = position
-            CommonInfo.debugInfo("$cName onReferenceKindSelected(${entity.referenceKind})")
-            viewModelScope.launch {
+            // DBキャッシュの値更新
+            if(dbUpdate){
+                entity.referenceKind = position
+                CommonInfo.debugInfo("$cName onReferenceKindSelected(${entity.referenceKind})")
                 updateData(entity)
             }
+            // インフォメーションメッセージ更新
+            changeInformationMessage()
         }
     }
+
     fun onEnableStatusSelected(_enable: Boolean, dbUpdate: Boolean = true) {
         CommonInfo.debugInfo("$cName onEnableStatusSelected($enable)")
         enable.value = _enable
 
-        // DB の値更新
+        // DBキャッシュの値更新
         if(dbUpdate){
             entity.enable = _enable
-            viewModelScope.launch {
-                updateData(entity)
+            updateData(entity)
+        }
+
+        // 表示色の更新
+        setColorAll(_enable)
+    }
+    private fun changeInformationMessage() {
+        val differenceKind = entity.differenceKind
+        var valueMessage = ""
+        if(differenceKind == InputMode.PRICE_INPUT.ordinal) {
+            if(entity.differencePrice >= 0) {
+                valueMessage = "+" + entity.differencePrice.toString() + " 円"
+            }
+            else {
+                valueMessage = entity.differencePrice.toString() + " 円"
             }
         }
+        else {
+            if(entity.differenceRatio >= 0) {
+                valueMessage = "+" + entity.differenceRatio.toString() + " ％"
+            }
+            else {
+                valueMessage = entity.differenceRatio.toString() + " ％"
+            }
+        }
+        var preferenceMessage = "「" +
+                ResourceApp.instance.resources.getStringArray(R.array.reference_kind)[entity.referenceKind] +
+                "」"
+
+        // 基準値差分のインフォメーションメッセージ
+        informationMessage.value =
+                    preferenceMessage +
+                    ResourceApp.instance.getString(R.string.price_designation_message_prefix) +
+                    " " + valueMessage + " " +
+                    ResourceApp.instance.getString(R.string.price_designation_message_suffix)
     }
 }

@@ -17,8 +17,8 @@
     <string name="label_target_price">差分価格</string>
     <string name="label_target_ratio">差分比率</string>
 
-    <string name="price_designation_message_prefix">基準値から、</string>
-    <string name="price_designation_message_suffix">円になったら通知</string>
+    <string name="price_designation_message_prefix">から</string>
+    <string name="price_designation_message_suffix">になったら通知</string>
 
     <string name="hint_input">タップしてください</string>
 
