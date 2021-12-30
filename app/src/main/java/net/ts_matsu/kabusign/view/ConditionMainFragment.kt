@@ -59,6 +59,11 @@ class ConditionMainFragment : Fragment() {
             if(it) findNavController().popBackStack()
         }
 
+        // OKボタンを監視する
+        binding.viewModel!!.requireOk.observe(viewLifecycleOwner) {
+            if(it) findNavController().popBackStack()
+        }
+
         // PriceInputDialog の結果を取得する
         setFragmentResultListener("DesignationPrice") {requestKey, bundle ->
             CommonInfo.debugInfo("$cName: setFragmentResultListener(${bundle.getInt("value")})")

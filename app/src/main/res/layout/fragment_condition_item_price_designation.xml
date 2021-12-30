@@ -21,6 +21,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:checked="@{viewModel.enable}"
+            app:thumbTint="@drawable/custom_switch"
+            app:trackTint="@drawable/custom_switch_track"
             android:onCheckedChanged="@{(view, isChecked) -> viewModel.onEnableStatusSelected(isChecked, true)}"/>
 
         <RadioGroup
@@ -36,6 +38,7 @@
                 android:layout_height="36dp"
                 android:background="@color/colorDarkNavy"
                 android:checked="@{viewModel.isPriceDesignationMode}"
+                android:clickable="@{viewModel.enable}"
                 android:fontFamily="@font/rounded_mgenplus_1c_bold"
                 android:textColor="@{context.getColor(viewModel.rbPriceDesignationColor)}"
                 android:textSize="16sp"
@@ -88,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:checked="@{!viewModel.isPriceDesignationMode}"
+                android:clickable="@{viewModel.enable}"
                 android:background="@color/colorDarkNavy"
                 android:textColor="@{context.getColor(viewModel.rbReferenceDesignationColor)}"
                 android:fontFamily="@font/rounded_mgenplus_1c_bold"
@@ -122,7 +126,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:spinnerMode="dialog"
-                    android:clickable="@{!viewModel.isPriceDesignationMode}"
+                    android:clickable="@{!viewModel.isPriceDesignationMode &amp;&amp; viewModel.enable}"
                     android:entries="@array/reference_kind"
                     android:selectedItemPosition="@={viewModel.kindSpinnerPosition}"
                     android:onItemSelected="@{(parent, view, position, id) -> viewModel.onReferenceKindSelected(position, true)}"
@@ -168,14 +172,14 @@
                             android:layout_height="36dp"
                             android:gravity="center_vertical"
                             android:checked="@{viewModel.isTargetPriceMode}"
-                            android:clickable="@{!viewModel.isPriceDesignationMode}"
+                            android:clickable="@{!viewModel.isPriceDesignationMode &amp;&amp; viewModel.enable}"
                             android:button="@drawable/custom_radiobutton"
                             android:background="@color/colorLightBlue"
                             android:textColor="@{context.getColor(viewModel.tvReferenceLabelColor)}"
                             android:fontFamily="@font/rounded_mgenplus_1c_bold"
                             android:textSize="16sp"
                             android:text="価格"
-                            android:onClick="@{() -> viewModel.onRequireTargetPriceMode()}"/>
+                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.InputMode.PRICE_INPUT, true)}"/>
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
@@ -188,14 +192,14 @@
                             android:paddingEnd="0dp"
                             android:gravity="center_vertical"
                             android:checked="@{!viewModel.isTargetPriceMode}"
-                            android:clickable="@{!viewModel.isPriceDesignationMode}"
+                            android:clickable="@{!viewModel.isPriceDesignationMode &amp;&amp; viewModel.enable}"
                             android:button="@drawable/custom_radiobutton"
                             android:background="@color/colorLightBlue"
                             android:textColor="@{context.getColor(viewModel.tvReferenceLabelColor)}"
                             android:fontFamily="@font/rounded_mgenplus_1c_bold"
                             android:textSize="16sp"
                             android:text="比率"
-                            android:onClick="@{() -> viewModel.onRequireTargetRatioMode()}"/>
+                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.InputMode.RATIO_INPUT, true)}"/>
                     </RadioGroup>
                 </LinearLayout>
                 <LinearLayout

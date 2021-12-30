@@ -2,6 +2,13 @@ package net.ts_matsu.kabusign.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import net.ts_matsu.kabusign.model.data.DatabaseCache
+import net.ts_matsu.kabusign.util.ResourceApp
 import net.ts_matsu.kabusign.view.AdapterInfo
 import net.ts_matsu.kabusign.view.ConditionItemCandle
 import net.ts_matsu.kabusign.view.ConditionItemPriceDesignation
@@ -15,8 +22,28 @@ class ConditionMainViewModel(): ViewModel() {
     val adapterList = mutableListOf<AdapterInfo>()
 
     // CANCELボタン処理
-    fun onNegativeButtonClick() {
+    fun onCancelButtonClick() {
         requireClose.value = true
+    }
+
+    // OKボタン処理
+    fun onOkButtonClick() {
+        viewModelScope.launch {
+            updateData()
+        }
+        requireOk.value = true
+    }
+
+    // DB 保存処理
+    private suspend fun updateData() {
+        withContext(Dispatchers.IO) {
+            val databaseCache = DatabaseCache()
+            for(entity in databaseCache.getPriceDesignationEntityList()) {
+                val dao = ResourceApp.database.priceDesignationDao()
+                dao.update(entity)
+            }
+            databaseCache.clearPriceDesignationEntityList()
+        }
     }
 
     // アダプタを設定する

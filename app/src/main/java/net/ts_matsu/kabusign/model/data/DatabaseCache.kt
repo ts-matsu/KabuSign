@@ -16,7 +16,16 @@ class DatabaseCache {
     }
 
     fun addPriceDesignationEntity(entity: PriceDesignationEntity) {
-        priceDesignationEntityList.add(entity)
+        var isUpdate = false
+        for((i,list) in priceDesignationEntityList.withIndex()) {
+            if(list.revision == entity.revision) {
+                priceDesignationEntityList[i] = entity
+                isUpdate = true
+            }
+        }
+        if(!isUpdate){
+            priceDesignationEntityList.add(entity)
+        }
     }
     fun addMonitoredStockEntity(entity: MonitoredStockEntity) {
         monitoredStockEntityList.add(entity)

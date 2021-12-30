@@ -1,11 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlActivated">@color/colorBlue</item>
+        <item name="colorSwitchThumbNormal">@color/colorLightGray</item>
+        <item name="android:colorForeground">@color/colorBlue2</item>
     </style>
 
     <style name="NumberPickerText">
@@ -17,4 +21,6 @@
         <item name="android:windowMinWidthMajor">0%</item>
         <item name="android:windowMinWidthMinor">0%</item>
     </style>
+
+
 </resources>
