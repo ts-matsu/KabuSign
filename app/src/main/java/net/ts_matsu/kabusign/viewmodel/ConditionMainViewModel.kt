@@ -50,7 +50,7 @@ class ConditionMainViewModel(): ViewModel() {
     fun createAdapter(code: String) {
         adapterList.add(AdapterInfo("価格指定1", ConditionItemPriceDesignation(0, code)))
         adapterList.add(AdapterInfo("価格指定2", ConditionItemPriceDesignation(1, code)))
-        adapterList.add(AdapterInfo("ローソク足", ConditionItemCandle()))
+        adapterList.add(AdapterInfo("ローソク足", ConditionItemCandle(code)))
     }
 
     init {

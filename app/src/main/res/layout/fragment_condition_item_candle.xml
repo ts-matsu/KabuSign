@@ -1,15 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.ConditionItemCandle">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/tvCandleTest"
+    <data>
+        <variable
+            name="viewModel"
+            type="net.ts_matsu.kabusign.viewmodel.ConditionItemCandleViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swCandleDesignationEnable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:checked="@{viewModel.enable}"
+            app:thumbTint="@drawable/custom_switch"
+            app:trackTint="@drawable/custom_switch_track"
+            android:onCheckedChanged="@{(view, isChecked) -> viewModel.onEnableStatusSelected(isChecked, true)}"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/rectangle_price_designation">
+
+            <RadioButton
+                android:id="@+id/rbCandleShape"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:checked="@{viewModel.isCandleShapeMode}"
+                android:clickable="@{viewModel.enable}"
+                android:background="@color/colorDarkNavy"
+                android:text="@string/candle_style_title"
+                android:textColor="@{context.getColor(viewModel.shapeTitleColor)}"
+                android:buttonTint="@color/colorOrange"
+                android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                android:textSize="16sp"
+                android:onClick="@{()->viewModel.onRequireInputMode(viewModel.CandleInputMode.SHAPE_INPUT, true)}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:paddingStart="16dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/candle_style_shape_title"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorLightBlue"
+                    android:textColor="@{context.getColor(viewModel.shapeContentsTitleColor)}"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="120dp"
+                    android:background="@color/colorDarkNavy"/>
+                <Spinner
+                    android:id="@+id/spCandleShape"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:gravity="center_vertical"
+                    android:spinnerMode="dialog"
+                    android:background="@color/colorWhite"
+                    android:entries="@array/candle_shape_info"
+                    android:clickable="@{viewModel.isCandleShapeMode &amp;&amp; viewModel.enable}"
+                    android:selectedItemPosition="@={viewModel.shapeSpinnerPosition}"
+                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCandleShapeSelected(position, true)}"
+                    />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="120dp"
+                    android:background="@color/colorDarkNavy"/>
+                <ImageView
+                    android:id="@+id/ivCandleShape"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@color/colorWhite"
+                    app:imageResource="@{viewModel.candleShapeIcon}"/>
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/rbCandlePattern"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:checked="@{!viewModel.isCandleShapeMode}"
+                android:clickable="@{viewModel.enable}"
+                android:background="@color/colorDarkNavy"
+                android:text="@string/candle_style_pattern_title"
+                android:textColor="@{context.getColor(viewModel.patternTitleColor)}"
+                android:buttonTint="@color/colorOrange"
+                android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                android:textSize="16sp"
+                android:onClick="@{()->viewModel.onRequireInputMode(viewModel.CandleInputMode.PATTERN_INPUT, true)}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:paddingStart="16dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/candle_style_pattern_title2"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:background="@color/colorLightBlue"
+                    android:textColor="@{context.getColor(viewModel.patternContentsTitleColor)}"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="120dp"
+                    android:background="@color/colorDarkNavy"/>
+                <Spinner
+                    android:id="@+id/spCandlePattern"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:gravity="center_vertical"
+                    android:spinnerMode="dialog"
+                    android:background="@color/colorWhite"
+                    android:entries="@array/candle_pattern_info"
+                    android:clickable="@{!viewModel.isCandleShapeMode &amp;&amp; viewModel.enable}"
+                    android:selectedItemPosition="@={viewModel.patternSpinnerPosition}"
+                    android:onItemSelected="@{(parent, view, position, id) -> viewModel.onCandlePatternSelected(position, true)}"
+                    />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="120dp"
+                    android:background="@color/colorDarkNavy"/>
+                <ImageView
+                    android:id="@+id/ivCandlePattern"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@color/colorWhite"
+                    app:imageResource="@{viewModel.candlePatternIcon}"/>
+            </LinearLayout>
+        </RadioGroup>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@color/colorDarkNavy"/>
+    </LinearLayout>
+</layout>

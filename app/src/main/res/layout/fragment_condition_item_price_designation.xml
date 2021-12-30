@@ -304,5 +304,9 @@
             </LinearLayout>
         </RadioGroup>
 
+<!--  各タブの大きさがデフォルトで小さい方に合わせられているようなので、余白を入れておく  -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
     </LinearLayout>
 </layout>

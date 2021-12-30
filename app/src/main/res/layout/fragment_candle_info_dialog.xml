@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@color/colorBlack"
-                    android:text="@string/candle_body_title"/>
+                    android:text="@string/candle_body_size_title"/>
                 <Spinner
                     android:id="@+id/spCandleBody"
                     android:layout_width="0dp"
@@ -59,7 +59,7 @@
                     android:layout_weight="1"
                     android:textSize="20sp"
                     android:background="@color/colorWhite"
-                    android:entries="@array/candle_body_info"
+                    android:entries="@array/candle_body_size_info"
                     android:selectedItemPosition="@={viewModel.candleBodyInfo}" />
             </LinearLayout>
             <LinearLayout
