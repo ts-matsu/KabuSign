@@ -39,8 +39,9 @@ class StockDownload {
     // 時系列データを取得する
     // lastDate: YYYYMMDD
     //   空""でない場合は、lastDate以降のデータのみを返す
-    suspend fun get(code: String, lastDate: String): MutableList<StockData> {
+    suspend fun get(code: String, lastDate: String): Pair<MutableList<StockData>, StockTodayData> {
         val stockData = mutableListOf<StockData>()
+        var stockTodayData = StockTodayData("", "", 0f, 0f, 0f, 0f, 0, 0f,0f)
         for(i in 1..maxPageForKabutan){
             val url = "kabuka?code=${code}&ashi=day&page=${i}"
             val response = service.getStockData(url)
@@ -51,6 +52,7 @@ class StockDownload {
                     CommonInfo.debugInfo("先頭：${stockData[0].date}")
                     // 先頭データの場合は、本日データを取得する
                     val todayData = parseTodayData(response.body())
+                    val todayDataSub = parseTodayDataSub(response.body())
                     if(todayData != null){
                         if(stockData[0].date == todayData.date){
                             stockData[0] = todayData
@@ -58,6 +60,7 @@ class StockDownload {
                         else{
                             stockData.add(0, todayData)
                         }
+                        stockTodayData = createTodayData(todayData, todayDataSub.first, todayDataSub.second)
                     }
                 }
             }
@@ -80,7 +83,7 @@ class StockDownload {
                 stockData.removeAt(removeIndex)
             }
         }
-        return stockData
+        return Pair(stockData, stockTodayData)
     }
 
     // Kabutanから取得したHTLMをパースして、StockDataクラスに格納する
@@ -154,6 +157,35 @@ class StockDownload {
             CommonInfo.debugInfo("$cName: parseTodayData $date, $sOpen, $sHigh, $sLow, $sClose, $sVolume")
         }
         return result
+    }
+
+    private fun parseTodayDataSub(body: String?): Pair<String, ArrayList<Float>> {
+        val doc = Jsoup.parse(body)
+        val infoId = doc.getElementById("stockinfo")
+        val dateData = infoId.getElementsByClass("si_i1_1")
+        val ratioData = infoId.getElementsByClass("si_i1_dl1")
+        var resultTime = ""
+        var resultRatio = arrayListOf<Float>(0f, 0f)
+        CommonInfo.debugInfo("$cName parseTodayData2")
+        dateData?.let {
+            resultTime = it.select("time").text()
+        }
+        ratioData?.let {
+
+            for((i,ratio) in ratioData.select("dd").withIndex()){
+                if(i < resultRatio.size){
+                    resultRatio[i] = ratio.text().replace("%", "").toFloat()
+                }
+            }
+        }
+        return Pair(resultTime, resultRatio)
+    }
+
+    private fun createTodayData(stockData: StockData, time: String, ratio: ArrayList<Float>): StockTodayData {
+        return  StockTodayData(
+            stockData.date, time, stockData.open, stockData.high, stockData.low, stockData.close, stockData.volume,
+            ratio[0], ratio[1]
+        )
     }
 }
 

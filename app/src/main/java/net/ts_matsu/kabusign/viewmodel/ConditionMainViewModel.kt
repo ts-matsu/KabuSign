@@ -1,13 +1,13 @@
 package net.ts_matsu.kabusign.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.DisposableHandle
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import net.ts_matsu.kabusign.model.StockDataManager
 import net.ts_matsu.kabusign.model.StockFile
+import net.ts_matsu.kabusign.model.StockTodayData
 import net.ts_matsu.kabusign.model.data.DatabaseCache
 import net.ts_matsu.kabusign.util.ResourceApp
 import net.ts_matsu.kabusign.util.StockInfo
@@ -21,18 +21,24 @@ class ConditionMainViewModel(): ViewModel() {
     private var code = ""
     private var name = ""
     private val stockList: List<StockInfo>
+    private lateinit var stockTodayData: StockTodayData
+    val adapterList = mutableListOf<AdapterInfo>()
 
     val requireClose = MutableLiveData(false)   // CANCELがタップされて、フラグメントを閉じることを通知
     val requireOk = MutableLiveData(false)      // OKがタップされて、フラグメントを閉じることを通知
     val mainText = MutableLiveData("")          // 最上部の銘柄名表示
+    val todayDate = MutableLiveData("")         // 日付
+    val todayTime = MutableLiveData("")         // 時刻
+
+    // チャート更新時のプログレスバー表示（LiveDataはこの形にすべきなのかな？？）
+    private val _isUpdateProgress = MutableLiveData<Boolean>(false)
+    val isUpdateProgress: LiveData<Boolean> get() = _isUpdateProgress
 
     init {
         // 銘柄リスト読み込み
         val stockFile = StockFile()
         stockList = stockFile.getSupportedStockList()
     }
-
-    val adapterList = mutableListOf<AdapterInfo>()
 
     fun setCode(_code: String) {
         code = _code
@@ -46,6 +52,19 @@ class ConditionMainViewModel(): ViewModel() {
         mainText.value = "$code : $name"
     }
 
+    fun getTodayData() {
+        // 本日データ取得
+        viewModelScope.launch {
+//            runBlocking {
+                val stockDataManager = StockDataManager()
+                _isUpdateProgress.value = true
+                stockTodayData = stockDataManager.getTodayData(code)
+                todayDate.value = "${stockTodayData.date.substring(4,6)}/${stockTodayData.date.substring(6)}"
+                todayTime.value = stockTodayData.time
+                _isUpdateProgress.value = false
+//            }
+        }
+    }
     // CANCELボタン処理
     fun onCancelButtonClick() {
         requireClose.value = true

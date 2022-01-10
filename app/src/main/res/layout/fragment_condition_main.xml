@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="net.ts_matsu.kabusign.viewmodel.ConditionMainViewModel" />
@@ -11,6 +12,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="32dp"
+            android:indeterminateTint="@color/colorBlue2"
+            android:visibility="@{viewModel.isUpdateProgress ? View.VISIBLE : View.INVISIBLE}"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MM/DD"
+                        android:text="@{viewModel.todayDate}"
                         android:textSize="14sp"/>
                     <TextView
                         android:layout_marginTop="2dp"
@@ -51,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="HH:MM"
+                        android:text="@{viewModel.todayTime}"
                         android:textSize="14sp"/>
                 </LinearLayout>
 
