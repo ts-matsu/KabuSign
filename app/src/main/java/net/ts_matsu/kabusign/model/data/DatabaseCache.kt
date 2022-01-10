@@ -34,7 +34,16 @@ class DatabaseCache {
         conditionKindEntityList.add(entity)
     }
     fun addCandleConditionEntity(entity: CandleConditionEntity) {
-        candleConditionEntityList.add(entity)
+        var isUpdate = false
+        for((i,list) in candleConditionEntityList.withIndex()) {
+            if(list.revision == entity.revision) {
+                candleConditionEntityList[i] = entity
+                isUpdate = true
+            }
+        }
+        if(!isUpdate){
+            candleConditionEntityList.add(entity)
+        }
     }
 
     fun getPriceDesignationEntityList(): MutableList<PriceDesignationEntity> {

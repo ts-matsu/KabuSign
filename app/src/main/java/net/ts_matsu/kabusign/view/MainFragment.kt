@@ -1,18 +1,11 @@
 package net.ts_matsu.kabusign.view
 
-import android.animation.ObjectAnimator
-import android.graphics.Color
-import android.graphics.DrawFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.marginLeft
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,13 +13,9 @@ import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.listener.ChartTouchListener
-import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.databinding.FragmentMainBinding
 import net.ts_matsu.kabusign.util.CommonInfo
-import net.ts_matsu.kabusign.util.StockInfo
 import net.ts_matsu.kabusign.viewmodel.MainViewModel
-import net.ts_matsu.kabusign.viewmodel.StockSelectViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -55,11 +44,6 @@ class MainFragment : Fragment() {
         // StockSelectDialogFragment起動
         binding.ibStockSelect.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToMonitoredStockFragment("")
-            findNavController().navigate(action)
-        }
-        // CandleInfoDialogFragment起動
-        binding.ibCandleInfo.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToCandleInfoDialogFragment(code = viewModel.currentStockCode)
             findNavController().navigate(action)
         }
         // StockNotificationFragment起動

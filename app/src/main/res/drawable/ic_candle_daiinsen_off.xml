@@ -1,0 +1,33 @@
+<vector android:height="60dp" android:viewportHeight="48"
+    android:viewportWidth="48" android:width="60dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <clip-path android:pathData="m0,0l48,0l0,48l-48,0l0,-48z"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m0,0l48,0l0,48l-48,0z"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#888888" android:fillType="evenOdd"
+            android:pathData="m17.99,11.1542l12.0181,0l0,26.1058l-12.0181,0z"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m17.99,11.1542l12.0181,0l0,26.1058l-12.0181,0z"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m23.999,6.4776l0,4.6766"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m23.999,6.4776l0,4.6766"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m23.999,37.26l0.0475,4.2622"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m23.999,37.26l0.0475,4.2622"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+    </group>
+</vector>

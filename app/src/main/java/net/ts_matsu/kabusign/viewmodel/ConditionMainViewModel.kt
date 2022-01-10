@@ -38,11 +38,19 @@ class ConditionMainViewModel(): ViewModel() {
     private suspend fun updateData() {
         withContext(Dispatchers.IO) {
             val databaseCache = DatabaseCache()
+            // 価格指定データを更新
             for(entity in databaseCache.getPriceDesignationEntityList()) {
                 val dao = ResourceApp.database.priceDesignationDao()
                 dao.update(entity)
             }
             databaseCache.clearPriceDesignationEntityList()
+
+            // ローソク足指定データを更新
+            for(entity in databaseCache.getCandleConditionEntityList()) {
+                val dao = ResourceApp.database.candleConditionDao()
+                dao.update(entity)
+            }
+            databaseCache.clearCandleConditionEntityList()
         }
     }
 
@@ -50,7 +58,7 @@ class ConditionMainViewModel(): ViewModel() {
     fun createAdapter(code: String) {
         adapterList.add(AdapterInfo("価格指定1", ConditionItemPriceDesignation(0, code)))
         adapterList.add(AdapterInfo("価格指定2", ConditionItemPriceDesignation(1, code)))
-        adapterList.add(AdapterInfo("ローソク足", ConditionItemCandle()))
+        adapterList.add(AdapterInfo("ローソク足", ConditionItemCandle(code)))
     }
 
     init {

@@ -80,13 +80,13 @@ class ConditionItemPriceDesignation(number: Int, code: String) : Fragment() {
                 var defaultValue = viewModel.getPrice()
                 var requestKey = "DesignationPrice"
                 if(viewModel.designationMode == ConditionItemPriceDesignationViewModel.DesignationMode.REFERENCE_DESIGNATION) {
-                    when (viewModel.inputMode){
-                        ConditionItemPriceDesignationViewModel.InputMode.PRICE_INPUT -> {
+                    when (viewModel.inputDialogMode){
+                        ConditionItemPriceDesignationViewModel.InputDialogMode.PRICE_INPUT -> {
                             isMinusInput = true
                             defaultValue = viewModel.getReferencePrice()
                             requestKey = "TargetPrice"
                         }
-                        ConditionItemPriceDesignationViewModel.InputMode.RATIO_INPUT -> {
+                        ConditionItemPriceDesignationViewModel.InputDialogMode.RATIO_INPUT -> {
                             isDotInput = true
                             isMinusInput = true
                             defaultValue = viewModel.getReferenceRatio()
