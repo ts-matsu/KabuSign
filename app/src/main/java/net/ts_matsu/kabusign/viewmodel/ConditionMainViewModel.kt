@@ -38,11 +38,19 @@ class ConditionMainViewModel(): ViewModel() {
     private suspend fun updateData() {
         withContext(Dispatchers.IO) {
             val databaseCache = DatabaseCache()
+            // 価格指定データを更新
             for(entity in databaseCache.getPriceDesignationEntityList()) {
                 val dao = ResourceApp.database.priceDesignationDao()
                 dao.update(entity)
             }
             databaseCache.clearPriceDesignationEntityList()
+
+            // ローソク足指定データを更新
+            for(entity in databaseCache.getCandleConditionEntityList()) {
+                val dao = ResourceApp.database.candleConditionDao()
+                dao.update(entity)
+            }
+            databaseCache.clearCandleConditionEntityList()
         }
     }
 

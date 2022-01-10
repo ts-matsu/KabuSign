@@ -16,9 +16,6 @@
             app:nullable="false"
             android:defaultValue="" />
         <action
-            android:id="@+id/action_mainFragment_to_candleInfoDialogFragment"
-            app:destination="@id/candleInfoDialogFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_stockNotificationDialogFragment"
             app:destination="@id/stockNotificationDialogFragment" />
         <action
@@ -45,9 +42,6 @@
             android:id="@+id/action_monitoredStockFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
         <action
-            android:id="@+id/action_monitoredStockFragment_to_candleInfoDialogFragment"
-            app:destination="@id/candleInfoDialogFragment" />
-        <action
             android:id="@+id/action_monitoredStockFragment_to_conditionMainFragment"
             app:destination="@id/conditionMainFragment" />
     </fragment>
@@ -60,23 +54,6 @@
         <action
             android:id="@+id/action_stockSelectDialogFragment_to_monitoredStockFragment"
             app:destination="@id/monitoredStockFragment" />
-    </dialog>
-    <dialog
-        android:id="@+id/candleInfoDialogFragment"
-        android:name="net.ts_matsu.kabusign.view.CandleInfoDialogFragment"
-        android:label="fragment_candle_info_dialog"
-        tools:layout="@layout/fragment_candle_info_dialog" >
-        <argument
-            android:name="code"
-            app:argType="string"
-            android:defaultValue="" />
-        <action
-            android:id="@+id/action_candleInfoDialogFragment_to_stockValuePickerDialogFragment"
-            app:destination="@id/stockValuePickerDialogFragment" />
-        <argument
-            android:name="stockValue"
-            app:argType="integer"
-            android:defaultValue="0" />
     </dialog>
     <dialog
         android:id="@+id/stockNotificationDialogFragment"

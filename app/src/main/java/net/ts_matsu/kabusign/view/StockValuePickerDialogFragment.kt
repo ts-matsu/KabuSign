@@ -8,13 +8,8 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.databinding.FragmentStockValuePickerDialogBinding
-import net.ts_matsu.kabusign.util.CommonInfo
-import net.ts_matsu.kabusign.viewmodel.CandleInfoViewModel
 import net.ts_matsu.kabusign.viewmodel.StockValuePickerDialogViewModel
 
 class StockValuePickerDialogFragment : DialogFragment() {

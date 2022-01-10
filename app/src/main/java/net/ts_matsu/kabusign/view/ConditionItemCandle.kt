@@ -39,14 +39,14 @@ class ConditionItemCandle(code: String) : Fragment() {
         val shapeAdapter = ArrayAdapter(requireContext(), R.layout.custom_spinner, resources.getStringArray(R.array.candle_shape_info))
         shapeAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
         shapeSpinner.adapter = shapeAdapter
-//        shapeSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+        shapeSpinner.setSelection(viewModel.shapeSpinnerPosition.value!!)
 
         // ローソク足パターンのスピナーを設定する
         patternSpinner = binding.root.findViewById<Spinner>(R.id.spCandlePattern)
         val patternAdapter = ArrayAdapter(requireContext(), R.layout.custom_spinner, resources.getStringArray(R.array.candle_pattern_info))
         patternAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
         patternSpinner.adapter = patternAdapter
-//        patternSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+        patternSpinner.setSelection(viewModel.patternSpinnerPosition.value!!)
 
         // 表示色を変更するため、ローソク足形状のスピナーを切り替える
         viewModel.isCandleShapeMode.observe(viewLifecycleOwner) {
@@ -56,7 +56,7 @@ class ConditionItemCandle(code: String) : Fragment() {
             }
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
             shapeSpinner.adapter = adapter
-//            shapeSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+            shapeSpinner.setSelection(viewModel.shapeSpinnerPosition.value!!)
         }
         viewModel.enable.observe(viewLifecycleOwner) {
             var adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_off, resources.getStringArray(R.array.candle_shape_info))
@@ -65,7 +65,7 @@ class ConditionItemCandle(code: String) : Fragment() {
             }
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
             shapeSpinner.adapter = adapter
-//            shapeSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+            shapeSpinner.setSelection(viewModel.shapeSpinnerPosition.value!!)
         }
 
         // 表示色を変更するため、ローソク足パターンのスピナーを切り替える
@@ -76,7 +76,7 @@ class ConditionItemCandle(code: String) : Fragment() {
             }
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
             patternSpinner.adapter = adapter
-//            shapeSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+            patternSpinner.setSelection(viewModel.patternSpinnerPosition.value!!)
         }
         viewModel.enable.observe(viewLifecycleOwner) {
             var adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_off, resources.getStringArray(R.array.candle_pattern_info))
@@ -85,7 +85,7 @@ class ConditionItemCandle(code: String) : Fragment() {
             }
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
             patternSpinner.adapter = adapter
-//            shapeSpinner.setSelection(viewModel.kindSpinnerPosition.value!!)
+            patternSpinner.setSelection(viewModel.patternSpinnerPosition.value!!)
         }
     }
 }

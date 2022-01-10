@@ -72,7 +72,7 @@
                     android:paddingEnd="16dp"
                     android:fontFamily="@font/rounded_mgenplus_1c_bold"
                     android:clickable="@{viewModel.isPriceDesignationMode}"
-                    android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputMode.PRICE_INPUT)}"
+                    android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputDialogMode.PRICE_INPUT)}"
                     android:textColor="@{context.getColor(viewModel.tvDesignationPriceColor)}"
                     android:textSize="24sp"
                     android:text="@={viewModel.designationPrice}" />
@@ -179,7 +179,7 @@
                             android:fontFamily="@font/rounded_mgenplus_1c_bold"
                             android:textSize="16sp"
                             android:text="価格"
-                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.InputMode.PRICE_INPUT, true)}"/>
+                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.ReferenceInputMode.REFERENCE_PRICE, true)}"/>
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
@@ -199,7 +199,7 @@
                             android:fontFamily="@font/rounded_mgenplus_1c_bold"
                             android:textSize="16sp"
                             android:text="比率"
-                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.InputMode.RATIO_INPUT, true)}"/>
+                            android:onClick="@{() -> viewModel.onRequireTargetModeChange(viewModel.ReferenceInputMode.REFERENCE_RATIO, true)}"/>
                     </RadioGroup>
                 </LinearLayout>
                 <LinearLayout
@@ -222,7 +222,7 @@
                             android:textSize="24sp"
                             android:text="@={viewModel.targetPrice}"
                             android:textColor="@{context.getColor(viewModel.tvTargetPriceColor)}"
-                            android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputMode.PRICE_INPUT)}" />
+                            android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputDialogMode.PRICE_INPUT)}" />
 
                         <TextView
                             android:id="@+id/tvTargetPricePrefix"
@@ -253,7 +253,7 @@
                             android:textSize="24sp"
                             android:text="@={viewModel.targetRatio}"
                             android:textColor="@{context.getColor(viewModel.tvTargetRatioColor)}"
-                            android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputMode.RATIO_INPUT)}" />
+                            android:onClick="@{() -> viewModel.onRequireInputDialogMode(viewModel.InputDialogMode.RATIO_INPUT)}" />
 
                         <TextView
                             android:id="@+id/tvTargetRatioPrefix"
