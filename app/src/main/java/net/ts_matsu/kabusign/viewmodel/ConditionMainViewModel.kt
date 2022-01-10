@@ -7,8 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.ts_matsu.kabusign.model.StockFile
 import net.ts_matsu.kabusign.model.data.DatabaseCache
 import net.ts_matsu.kabusign.util.ResourceApp
+import net.ts_matsu.kabusign.util.StockInfo
 import net.ts_matsu.kabusign.view.AdapterInfo
 import net.ts_matsu.kabusign.view.ConditionItemCandle
 import net.ts_matsu.kabusign.view.ConditionItemPriceDesignation
@@ -16,10 +18,33 @@ import net.ts_matsu.kabusign.view.ConditionItemPriceDesignation
 class ConditionMainViewModel(): ViewModel() {
     private val cName = ConditionMainViewModel::class.java.simpleName
 
+    private var code = ""
+    private var name = ""
+    private val stockList: List<StockInfo>
+
     val requireClose = MutableLiveData(false)   // CANCELがタップされて、フラグメントを閉じることを通知
     val requireOk = MutableLiveData(false)      // OKがタップされて、フラグメントを閉じることを通知
+    val mainText = MutableLiveData("")          // 最上部の銘柄名表示
+
+    init {
+        // 銘柄リスト読み込み
+        val stockFile = StockFile()
+        stockList = stockFile.getSupportedStockList()
+    }
 
     val adapterList = mutableListOf<AdapterInfo>()
+
+    fun setCode(_code: String) {
+        code = _code
+
+        // 銘柄名を設定する
+        for(info in stockList) {
+            if(code == info.code) {
+                name = info.name
+            }
+        }
+        mainText.value = "$code : $name"
+    }
 
     // CANCELボタン処理
     fun onCancelButtonClick() {

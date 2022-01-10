@@ -41,6 +41,7 @@ class ConditionMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if(args.code.isNotEmpty()) {
+            viewModel.setCode(args.code)
             viewModel.createAdapter(args.code)
         }
         conditionSettingAdapter = ConditionSettingAdapter(this,
