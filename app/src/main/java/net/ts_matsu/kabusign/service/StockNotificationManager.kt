@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import net.ts_matsu.kabusign.model.data.KabuSignDatabase
 import net.ts_matsu.kabusign.util.CommonInfo
 import net.ts_matsu.kabusign.util.ResourceApp
-import net.ts_matsu.kabusign.viewmodel.CandleInfoViewModel
 
 class StockNotificationManager(appContext: Context, workerParams: WorkerParameters)
     : Worker(appContext, workerParams) {
@@ -27,13 +26,13 @@ class StockNotificationManager(appContext: Context, workerParams: WorkerParamete
         val enableCandle = mutableListOf<String>()
 
         // ローソク足設定が有効になっている銘柄を抽出する
-        candleList?.let {
-            for(d in candleList) {
-                if(d.isEnabled){
-                    enableCandle.add(d.code)
-                }
-            }
-        }
+//        candleList?.let {
+//            for(d in candleList) {
+//                if(d.isEnabled){
+//                    enableCandle.add(d.code)
+//                }
+//            }
+//        }
         // 移動平均設定が有効になっている銘柄を抽出する
 
 

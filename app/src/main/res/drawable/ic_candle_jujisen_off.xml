@@ -1,0 +1,34 @@
+<vector android:height="60dp" android:viewportHeight="48"
+    android:viewportWidth="48" android:width="60dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <clip-path android:pathData="m0,0l48,0l0,48l-48,0l0,-48z"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m0,0l48,0l0,48l-48,0z"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m24.0472,18.0105l0,5.6693"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m24.0472,18.0105l0,5.6693"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m24.0314,24.005l0,5.9843"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m24.0314,24.005l0,5.9843"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+        <path android:fillAlpha="0" android:fillColor="#888888"
+            android:fillType="evenOdd"
+            android:pathData="m28.5823,24.0053l-9.1654,0"
+            android:strokeColor="#00000000" android:strokeLineCap="square"/>
+        <path android:fillColor="#00000000" android:fillType="evenOdd"
+            android:pathData="m28.5823,24.0053l-9.1654,0"
+            android:strokeColor="#888888" android:strokeLineCap="butt"
+            android:strokeLineJoin="round" android:strokeWidth="2.0"/>
+    </group>
+</vector>

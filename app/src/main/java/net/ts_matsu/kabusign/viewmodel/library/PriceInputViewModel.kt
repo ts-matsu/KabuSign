@@ -1,5 +1,6 @@
 package net.ts_matsu.kabusign.viewmodel.library
 
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import net.ts_matsu.kabusign.util.ResourceApp
@@ -88,11 +89,29 @@ class PriceInputViewModel(_isDot: Boolean=false, _isMinus: Boolean=false): ViewM
         designationPrice.value?.let {
             designationPrice.value += value
         }
+        setDigitSeparator()
     }
     private fun addValueToTop(value: String) {
         designationPrice.value?.let {
             var tmp = value + designationPrice.value
             designationPrice.value = tmp
+        }
+    }
+    private fun setDigitSeparator(){
+        designationPrice.value?.let {
+            if(it.isNotBlank() && !it.contains(".") && (it != "-")){
+                val tmp = it.replace(",", "")
+                var tmpInt = tmp.toInt()
+                if(Math.abs(tmpInt) >= 1000) {
+                    designationPrice.value =  "%,d".format(tmpInt)
+                }
+                else {
+                    designationPrice.value =  "%d".format(tmpInt)
+                }
+            }
+            else {
+                // 小数点を含む場合は、100未満のため、桁区切り入れない
+            }
         }
     }
     private fun getLastValue(): String {
@@ -108,6 +127,7 @@ class PriceInputViewModel(_isDot: Boolean=false, _isMinus: Boolean=false): ViewM
         designationPrice.value?.let {
             setValue(it.dropLast(1))
         }
+        setDigitSeparator()
     }
 
     // 数値ボタンクリック
@@ -125,10 +145,6 @@ class PriceInputViewModel(_isDot: Boolean=false, _isMinus: Boolean=false): ViewM
                     // 小数点ありの場合(比率）は、MAX値が100までなので、入力できない
                 }
                 else {
-                    // 追加すると、1000の桁になる場合は、先に','を入れる
-                    if(getLength() == 3){
-                        addValue(",")
-                    }
                     addValue(value.toString())
                 }
             }
@@ -175,6 +191,10 @@ class PriceInputViewModel(_isDot: Boolean=false, _isMinus: Boolean=false): ViewM
 
     // OKボタンクリック
     fun onOkClick(){
+        // マイナスのみの場合は、空に変換する
+        if(designationPrice.value == "-") {
+            designationPrice.value = ""
+        }
         // ダイアログ終了
         // Fragment側に通知して、設定されている値(designationPriceInt)を、
         // 呼び出し元のFragmentに通知する

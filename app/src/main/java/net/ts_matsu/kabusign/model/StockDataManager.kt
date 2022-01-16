@@ -12,6 +12,7 @@ class StockDataManager {
         // 時系列データを保持するリスト
         // key: 銘柄コード(String)
         private val stockDataList: MutableMap<String, MutableList<StockData>> = mutableMapOf()
+        private val stockTodayDataList: MutableMap<String, StockTodayData> = mutableMapOf()
 
         // ファイル保存されている時系列データ銘柄リスト
 //        private val stockList: MutableList<StockInfo> = mutableListOf()
@@ -19,6 +20,14 @@ class StockDataManager {
 
     // 時系列データの取得
     suspend fun getDataList(code: String, isUpdate: Boolean): MutableList<StockData> {
+        return getDataListInner(code, isUpdate).first
+    }
+    // 本日データのみ取得
+    suspend fun getTodayData(code: String): StockTodayData {
+        return getDataListInner(code, true).second
+    }
+
+    private suspend fun getDataListInner(code: String, isUpdate: Boolean): Pair<MutableList<StockData>, StockTodayData> {
         val download = StockDownload()
         if(stockDataList.containsKey(code)){
             // キャッシュされている場合（ダウンロード済み）
@@ -28,7 +37,7 @@ class StockDataManager {
                 CommonInfo.debugInfo("$cName: 222")
                 val lastDate = stockDataList[code]!![0].date
                 val stockData = download.get(code, lastDate)
-                for(d in stockData.asReversed()){
+                for(d in stockData.first.asReversed()){
                     if(d.date == lastDate){
                         // 現状保持されている最新のデータの場合は、更新する
                         stockDataList[code]!![0] = d
@@ -40,15 +49,21 @@ class StockDataManager {
                         CommonInfo.debugInfo("$cName: bbb(${d.date})")
                     }
                 }
+                stockTodayDataList[code] = stockData.second
             }
         }
         else{
             CommonInfo.debugInfo("$cName: 444")
             // キャッシュされてない場合は、最新データをダウンロードしてキャッシュする
             val stockData = download.get(code, "")
-            stockDataList[code] = stockData
+            stockDataList[code] = stockData.first
+            stockTodayDataList[code] = stockData.second
         }
-        return stockDataList[code]!!.asReversed()
+        return Pair(stockDataList[code]!!.asReversed(), stockTodayDataList[code]!!)
     }
 }
+
 data class StockData(val date: String, val open: Float, val high: Float, val low: Float, val close: Float, val volume: Int)
+data class StockTodayData(val date: String, val time: String,
+                          val open: Float, val high: Float, val low: Float, val close: Float, val volume: Int,
+                          val ratio1: Float, val ratio2: Float)

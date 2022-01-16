@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="net.ts_matsu.kabusign.viewmodel.ConditionMainViewModel" />
@@ -12,19 +13,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="32dp"
+            android:indeterminateTint="@color/colorBlue2"
+            android:visibility="@{viewModel.isUpdateProgress ? View.VISIBLE : View.INVISIBLE}"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="xxxx: ABCDホールディングス(株)"
-                android:textSize="24sp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:text="@{viewModel.mainCode}"
+                    android:textColor="@{context.getColor(viewModel.tvCodeColor)}"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:layout_marginStart="8dp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeMinTextSize="16sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:textColor="@{context.getColor(viewModel.tvTitleColor)}"
+                    android:text="@{viewModel.mainTitle}" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,49 +72,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="8dp">
+                    android:layout_marginStart="8dp">
 
                     <TextView
                         android:id="@+id/tvConditionDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MM/DD"
-                        android:textSize="14sp"/>
+                        android:text="@{viewModel.todayDate}"
+                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                        android:textColor="@{context.getColor(viewModel.tvTimeColor)}"
+                        android:textSize="12sp"/>
                     <TextView
-                        android:layout_marginTop="2dp"
                         android:id="@+id/tvConditionTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="HH:MM"
-                        android:textSize="14sp"/>
+                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                        android:textColor="@{context.getColor(viewModel.tvTimeColor)}"
+                        android:text="@{viewModel.todayTime}"
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvConditionCurrentValue"
-                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="12,345"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:text="@{viewModel.todayValue}"
+                    android:textColor="@{context.getColor(viewModel.tvValueColor)}"
                     android:textSize="28sp"/>
 
                 <TextView
                     android:id="@+id/tvConditionRatioValue"
-                    android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+100.0"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:text="@{viewModel.todayDiffValue}"
+                    android:textColor="@{context.getColor(viewModel.tvValueColor)}"
                     android:textSize="20dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_gravity="center_vertical"
-                    android:text="(+10.0%)"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:text="@{viewModel.todayDiffRatio}"
+                    android:textColor="@{context.getColor(viewModel.tvValueColor)}"
                     android:textSize="18sp"/>
             </LinearLayout>
 
@@ -105,7 +150,6 @@
                 android:layout_height="wrap_content" />
 
             <androidx.viewpager2.widget.ViewPager2
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

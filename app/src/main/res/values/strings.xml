@@ -22,38 +22,52 @@
 
     <string name="hint_input">タップしてください</string>
 
-    <string name="candle_style_title"><u>ローソク足の形状</u></string>
-    <string name="candle_body_title">形状</string>
-    <string-array name="candle_body_info">
-        <item>指定しない</item>
-        <item>陽線(大)</item>
-        <item>陽線(中)</item>
-        <item>陽線(小)</item>
-        <item>陰線(大)</item>
-        <item>陰線(中)</item>
-        <item>陰線(小)</item>
+    <string name="candle_style_title">ローソク足の形状</string>
+    <string name="candle_style_shape_title">形状</string>
+    <string name="candle_style_pattern_title">ローソク足のパターン</string>
+    <string name="candle_style_pattern_title2">パターン</string>
+    <string name="candle_style_main">陽 / 陰</string>
+    <string-array name="candle_shape_info">
+        <item>大陽線</item>
+        <item>大陰線</item>
+        <item>小陽線</item>
+        <item>小陰線</item>
+        <item>上影陽線</item>
+        <item>上影陰線</item>
+        <item>下影陽線</item>
+        <item>下影陰線</item>
         <item>十字線</item>
     </string-array>
-    <string name="candle_shadows_title">ヒゲ</string>
-    <string-array name="candle_shadows_info">
-        <item>指定しない</item>
-        <item>上ヒゲ(短)  /  下ヒゲ(短)</item>
-        <item>上ヒゲ(短)  /  下ヒゲ(中)</item>
-        <item>上ヒゲ(短)  /  下ヒゲ(長)</item>
-        <item>上ヒゲ(短)  /  下ヒゲ(無)</item>
-        <item>上ヒゲ(中)  /  下ヒゲ(短)</item>
-        <item>上ヒゲ(中)  /  下ヒゲ(中)</item>
-        <item>上ヒゲ(中)  /  下ヒゲ(長)</item>
-        <item>上ヒゲ(中)  /  下ヒゲ(無)</item>
-        <item>上ヒゲ(長)  /  下ヒゲ(短)</item>
-        <item>上ヒゲ(長)  /  下ヒゲ(中)</item>
-        <item>上ヒゲ(長)  /  下ヒゲ(長)</item>
-        <item>上ヒゲ(長)  /  下ヒゲ(無)</item>
-        <item>上ヒゲ(無)  /  下ヒゲ(短)</item>
-        <item>上ヒゲ(無)  /  下ヒゲ(中)</item>
-        <item>上ヒゲ(無)  /  下ヒゲ(長)</item>
-        <item>上ヒゲ(無)  /  下ヒゲ(無)</item>
+    <string-array name="candle_pattern_info">
+        <item>包み陽線</item>
+        <item>包み陰線</item>
+        <item>はらみ陽線</item>
+        <item>はらみ陰線</item>
+        <item>かぶせ線</item>
+        <item>切り込み線</item>
     </string-array>
+
+    <string-array name="candle_main_info">
+        <item>陽線</item>
+        <item>陰線</item>
+    </string-array>
+    <string name="candle_body_size_title">大きさ</string>
+    <string-array name="candle_body_size_info">
+        <item>指定なし</item>
+        <item>　大　</item>
+        <item>　中　</item>
+        <item>　小　</item>
+    </string-array>
+    <string name="candle_shadows_title">ヒゲ</string>
+    <string name="candle_shadows_upper_title">上ヒゲ</string>
+    <string name="candle_shadows_lower_title">下ヒゲ</string>
+    <string-array name="candle_shadows_info">
+        <item>指定なし</item>
+        <item>　短　</item>
+        <item>　中　</item>
+        <item>　長　</item>
+    </string-array>
+
     <string name="candle_value_title"><u>ローソク足の値</u></string>
     <string name="candle_open_title">始値</string>
     <string name="candle_close_title">終値</string>
@@ -67,6 +81,10 @@
         <item>より大きい</item>
         <item>より小さい</item>
     </string-array>
+    
+    <string name="start_brackets">(</string>
+    <string name="end_brackets">)</string>
+    <string name="percent">%</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
