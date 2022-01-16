@@ -81,6 +81,10 @@
         <item>より大きい</item>
         <item>より小さい</item>
     </string-array>
+    
+    <string name="start_brackets">(</string>
+    <string name="end_brackets">)</string>
+    <string name="percent">%</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

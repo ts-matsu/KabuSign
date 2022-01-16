@@ -5,15 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
+import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.model.StockDataManager
 import net.ts_matsu.kabusign.model.StockFile
 import net.ts_matsu.kabusign.model.StockTodayData
 import net.ts_matsu.kabusign.model.data.DatabaseCache
+import net.ts_matsu.kabusign.util.CommonInfo
 import net.ts_matsu.kabusign.util.ResourceApp
 import net.ts_matsu.kabusign.util.StockInfo
 import net.ts_matsu.kabusign.view.AdapterInfo
 import net.ts_matsu.kabusign.view.ConditionItemCandle
 import net.ts_matsu.kabusign.view.ConditionItemPriceDesignation
+import java.math.BigDecimal
 
 class ConditionMainViewModel(): ViewModel() {
     private val cName = ConditionMainViewModel::class.java.simpleName
@@ -26,9 +29,18 @@ class ConditionMainViewModel(): ViewModel() {
 
     val requireClose = MutableLiveData(false)   // CANCELがタップされて、フラグメントを閉じることを通知
     val requireOk = MutableLiveData(false)      // OKがタップされて、フラグメントを閉じることを通知
-    val mainText = MutableLiveData("")          // 最上部の銘柄名表示
+    val mainCode = MutableLiveData("")          // 最上部の銘柄コード表示
+    val mainTitle = MutableLiveData("")         // 最上部の銘柄名表示
     val todayDate = MutableLiveData("")         // 日付
     val todayTime = MutableLiveData("")         // 時刻
+    val todayValue = MutableLiveData("")        // 本日(現在)の株価
+    val todayDiffValue = MutableLiveData("")    // 前日比(価格)
+    val todayDiffRatio = MutableLiveData("")    // 前日比(比率)
+
+    val tvCodeColor = MutableLiveData(R.color.colorBlack)
+    val tvTitleColor = MutableLiveData(R.color.colorBlack)
+    val tvTimeColor = MutableLiveData(R.color.colorBlack)
+    val tvValueColor = MutableLiveData(R.color.colorRed)
 
     // チャート更新時のプログレスバー表示（LiveDataはこの形にすべきなのかな？？）
     private val _isUpdateProgress = MutableLiveData<Boolean>(false)
@@ -49,20 +61,50 @@ class ConditionMainViewModel(): ViewModel() {
                 name = info.name
             }
         }
-        mainText.value = "$code : $name"
+        mainCode.value = code
+        mainTitle.value = name
     }
 
     fun getTodayData() {
         // 本日データ取得
         viewModelScope.launch {
-//            runBlocking {
-                val stockDataManager = StockDataManager()
-                _isUpdateProgress.value = true
-                stockTodayData = stockDataManager.getTodayData(code)
-                todayDate.value = "${stockTodayData.date.substring(4,6)}/${stockTodayData.date.substring(6)}"
-                todayTime.value = stockTodayData.time
-                _isUpdateProgress.value = false
-//            }
+            val stockDataManager = StockDataManager()
+            _isUpdateProgress.value = true
+            stockTodayData = stockDataManager.getTodayData(code)
+
+            // 時刻更新
+            todayDate.value = "${stockTodayData.date.substring(4,6)}/${stockTodayData.date.substring(6)}"
+            todayTime.value = stockTodayData.time
+
+            // 株価に関しては、小数点以下が0で無い場合のみ、少数を表示させる
+            CommonInfo.debugInfo("$cName todayValue: ${1 % stockTodayData.close}")
+            if(stockTodayData.close % 1 != 0f){
+                todayValue.value = "%,.d".format(stockTodayData.close)
+            }
+            else {
+                todayValue.value = "%,d".format(stockTodayData.close.toInt())
+            }
+
+            // 前日比(価格)
+            if(stockTodayData.ratio1 % 1 != 0f){
+                todayDiffValue.value = stockTodayData.ratio1.toString()
+            }
+            else {
+                todayDiffValue.value = stockTodayData.ratio1.toInt().toString()
+            }
+            // (%)は、本来xmlファイル側で付けたいが、そうすると、初期状態からのデータ読み込み中表示で、
+            // "(%)"と表示されて不細工なので、ここで付けることにする
+            todayDiffRatio.value = "(${stockTodayData.ratio2}%)"
+
+            // 価格の色設定
+            // 前日比がマイナスなら緑、そうでなければ赤とする
+            if(stockTodayData.ratio1 >= 0) {
+                tvValueColor.value = R.color.colorRed
+            }
+            else {
+                tvValueColor.value = R.color.colorGreen
+            }
+            _isUpdateProgress.value = false
         }
     }
     // CANCELボタン処理
