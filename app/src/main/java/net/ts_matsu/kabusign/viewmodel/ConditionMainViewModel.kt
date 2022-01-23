@@ -92,17 +92,23 @@ class ConditionMainViewModel(): ViewModel() {
             else {
                 todayDiffValue.value = stockTodayData.ratio1.toInt().toString()
             }
+
             // (%)は、本来xmlファイル側で付けたいが、そうすると、初期状態からのデータ読み込み中表示で、
             // "(%)"と表示されて不細工なので、ここで付けることにする
             todayDiffRatio.value = "(${stockTodayData.ratio2}%)"
 
-            // 価格の色設定
-            // 前日比がマイナスなら緑、そうでなければ赤とする
-            if(stockTodayData.ratio1 >= 0) {
-                tvValueColor.value = R.color.colorRed
+            // 前日比が＋の場合は、意図的に"+"を付加する（±0の場合は何も付加しない）
+            if(stockTodayData.ratio1 > 0f){
+                todayDiffValue.value = "+${todayDiffValue.value}"
+                todayDiffRatio.value = todayDiffRatio.value!!.replace("(", "(+")
             }
-            else {
-                tvValueColor.value = R.color.colorGreen
+
+            // 価格の色設定
+            // 前日比がマイナスなら緑、プラスなら赤、±0なら黒とする
+            when {
+                stockTodayData.ratio1 > 0 -> tvValueColor.value = R.color.colorRed
+                stockTodayData.ratio1 < 0 -> tvValueColor.value = R.color.colorGreen
+                else -> tvValueColor.value = R.color.colorBlack
             }
             _isUpdateProgress.value = false
         }

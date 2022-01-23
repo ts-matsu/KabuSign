@@ -16,6 +16,9 @@ import java.time.LocalDate
 
 
 // 時系列データのダウンロード、データ保持用オブジェクト
+// 現状(2022/1/23)は、kabutan からダウンロードしているが、
+// 当日データについては、ゆくゆくは、ログインしているサイト（楽天証券やSBI）から
+// 取得できるようにする
 class StockDownload {
     private val maxPageForKabutan = 10
     private val cName = MainFragment::class.java.simpleName
@@ -133,10 +136,6 @@ class StockDownload {
         val date = rows.select("th").select("time").text()
         val valueList = rows.select("td")
 
-        val nowDate = LocalDate.now()
-        val diffDate = "%02d/%02d/%02d".format(nowDate.year%100, nowDate.monthValue, nowDate.dayOfMonth)
-        CommonInfo.debugInfo("$cName: parseTodayData $date, $diffDate")
-
         var sOpen:Float? = 0f
         var sHigh:Float? = 0f
         var sLow:Float? = 0f
@@ -152,7 +151,7 @@ class StockDownload {
             }
         }
         if (sOpen != null && sHigh != null && sLow != null && sClose != null && sVolume != null) {
-            val sDate = "%04d%02d%02d".format(nowDate.year, nowDate.monthValue, nowDate.dayOfMonth)
+            val sDate = "20${date.replace("/","")}"
             result = StockData(sDate, sOpen.toFloat(), sHigh.toFloat(), sLow.toFloat(), sClose.toFloat(), sVolume.toInt())
             CommonInfo.debugInfo("$cName: parseTodayData $date, $sOpen, $sHigh, $sLow, $sClose, $sVolume")
         }
