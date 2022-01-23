@@ -46,6 +46,19 @@ class ConditionMainViewModel(): ViewModel() {
     private val _isUpdateProgress = MutableLiveData<Boolean>(false)
     val isUpdateProgress: LiveData<Boolean> get() = _isUpdateProgress
 
+    // チャートデータ表示
+    private val _chartDisplay = MutableLiveData<Boolean>(false)
+    val chartDisplay: LiveData<Boolean> get() = _chartDisplay
+    fun onChartDisplay(){
+        // プログレスバー表示中は、チャート表示させない
+        if(!_isUpdateProgress.value!!){
+            _chartDisplay.value = true
+        }
+    }
+    fun clearCharDisplay() {
+        _chartDisplay.value = false
+    }
+
     init {
         // 銘柄リスト読み込み
         val stockFile = StockFile()
@@ -64,6 +77,7 @@ class ConditionMainViewModel(): ViewModel() {
         mainCode.value = code
         mainTitle.value = name
     }
+    fun getCode(): String = code
 
     fun getTodayData() {
         // 本日データ取得
@@ -155,5 +169,7 @@ class ConditionMainViewModel(): ViewModel() {
 
     init {
         // DB を読み出して、サポートしている指定種別を読み出し、Adapterに反映させる todo
+
+        CommonInfo.debugInfo("$cName chartDisplay:$chartDisplay")
     }
 }
