@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="top">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="net.ts_matsu.kabusign.viewmodel.ChartDisplayDialogViewModel" />
@@ -9,14 +11,45 @@
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/llChatDisplayTop"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/colorBlack"
-            android:textSize="36sp"
-            android:text="Hello" />
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combinedChart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llChatDisplayTop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0" >
+        </com.github.mikephil.charting.charts.CombinedChart>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="64dp"
+            android:indeterminateTint="@color/colorBlue2"
+            android:visibility="@{viewModel.isUpdateProgress ? View.VISIBLE : View.INVISIBLE}"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
