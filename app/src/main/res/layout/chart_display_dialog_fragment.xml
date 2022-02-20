@@ -17,9 +17,34 @@
         <LinearLayout
             android:id="@+id/llChatDisplayTop"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="44dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#10000000"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:selected="@{viewModel.isLineImageButton}"
+                app:srcCompat="@drawable/line_image_button"
+                android:onClick="@{() -> viewModel.onClickLineImageButton()}"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#10000000"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_baseline_refresh_36"
+                android:onClick="@{() -> viewModel.onClickUpdateImageButton()}" />
 
         </LinearLayout>
 
@@ -28,10 +53,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llChatDisplayTop"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btChartDisplayEnd"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="0.0" >
         </com.github.mikephil.charting.charts.CombinedChart>
@@ -49,6 +75,21 @@
             android:indeterminateTint="@color/colorBlue2"
             android:visibility="@{viewModel.isUpdateProgress ? View.VISIBLE : View.INVISIBLE}"
             />
+
+        <Button
+            android:id="@+id/btChartDisplayEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Cancel"
+            android:textColor="@color/colorBlack"
+            android:background="#00000000"
+            android:textSize="16sp"
+            android:onClick="@{() -> viewModel.onNegativeButtonClick()}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

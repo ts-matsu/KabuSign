@@ -8,6 +8,7 @@ import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.viewmodel.ChartDisplayDialogViewModel
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.XAxis
@@ -41,9 +42,8 @@ class ChartDisplayDialogFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 銘柄名、株価の2行の高さの、全体の高さに対する割合
-        // ひとまず 80dp としている
-        val topMarginPixel = 80 * resources.displayMetrics.density
+        // 銘柄名、株価の2行の高さ。ひとまず 88dp としている
+        val topMarginPixel = 88 * resources.displayMetrics.density
 
         // ダイアログの位置を調整
         dialog?.window?.attributes.also {
@@ -84,7 +84,7 @@ class ChartDisplayDialogFragment : DialogFragment() {
                 view.performClick()     // これをコールしろとメッセージが出るためコールしている
 
                 // タップ時のみ横線描画
-                if(motionEvent.action == MotionEvent.ACTION_DOWN){
+                if(motionEvent.action == MotionEvent.ACTION_DOWN || motionEvent.action == MotionEvent.ACTION_MOVE){
                     val pointY = getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.x, motionEvent.y).y.toFloat()
                     showLimitLine(pointY)
                 }
@@ -93,6 +93,10 @@ class ChartDisplayDialogFragment : DialogFragment() {
             }
         }
 
+        // Cancelボタンを監視する
+        binding.viewModel!!.requireClose.observe(viewLifecycleOwner) {
+            if(it) findNavController().popBackStack()
+        }
     }
 
     // MPAndroidChartは、データバインディングサポートしてないので、
@@ -115,12 +119,23 @@ class ChartDisplayDialogFragment : DialogFragment() {
 
     private fun showLimitLine(yValue: Float){
         val value = yValue.toInt().toFloat()    // 整数に変換
+        // 横線情報設定
+        viewModel.setLimitLine(value)
+
+        // すでに表示されている横線削除して、今の値で追加（アイコンがOFFの場合のみ）
         viewModel.getLimitLine(value)?.let {
             val combinedChart = binding.combinedChart
             val axisRight = combinedChart.axisRight
-            axisRight.removeAllLimitLines()
+            viewModel.removeAndSetLimitLine(it.limit, value)
+            axisRight.removeLimitLine(it)
+        }
+
+        // 横線表示
+        viewModel.getLimitLine(value)?.let {
+            val combinedChart = binding.combinedChart
+            val axisRight = combinedChart.axisRight
             axisRight.addLimitLine(it)
-            combinedChart.notifyDataSetChanged()
+             combinedChart.notifyDataSetChanged()
             combinedChart.invalidate()
         }
     }

@@ -15,6 +15,8 @@ import net.ts_matsu.kabusign.util.CommonInfo
 class ChartDisplayDialogViewModel : ViewModel() {
     private val cName = ChartDisplayDialogViewModel::class.java.simpleName
 
+    val requireClose = MutableLiveData(false)   // CANCELがタップされて、ダイアログを閉じることを通知
+
     // チャートデータ
     private val _chartData = MutableLiveData<CombinedData>()
     val chartData: LiveData<CombinedData> get() = _chartData
@@ -24,8 +26,8 @@ class ChartDisplayDialogViewModel : ViewModel() {
     val dateData: LiveData<MutableList<String>> get() = _dateData
 
     // 横線描画用アイコンの状態
-    private val _isEditImageButton = MutableLiveData<Boolean>(false)
-    val isEditImageButton: LiveData<Boolean> get() = _isEditImageButton
+    private val _isLineImageButton = MutableLiveData<Boolean>(false)
+    val isLineImageButton: LiveData<Boolean> get() = _isLineImageButton
 
     // チャート更新時のプログレスバー表示
     private val _isUpdateProgress = MutableLiveData<Boolean>(false)
@@ -33,7 +35,10 @@ class ChartDisplayDialogViewModel : ViewModel() {
 
     // 保持する各種データ
     var currentStockCode = ""                                               // 現在表示中の銘柄コード
-    private val chartList = mutableListOf<StockChart>()                     // 各銘柄のチャート情報
+    private val chartList = mutableListOf<StockChart>()                     // 各銘柄のチャート情報(1銘柄だけになると思うが)
+
+    // 横線情報
+    private val limitLineInfo = mutableListOf<LimitLine>()
 
     // 銘柄情報（コード）を設定する
     fun setStockItem(code: String){
@@ -45,18 +50,83 @@ class ChartDisplayDialogViewModel : ViewModel() {
         }
     }
 
+    // CANCELボタン処理
+    fun onNegativeButtonClick() {
+        requireClose.value = true
+    }
+
+    // チャート更新イメージボタンタップ
+    fun onClickUpdateImageButton() {
+        if(currentStockCode.isNotEmpty()){
+            setChartData(true)
+        }
+    }
+
+    // 横線追加（アイコンがアクティブの場合のみ）
+    fun setLimitLine(data: Float) {
+        if(currentStockCode.isNotEmpty() && _isLineImageButton.value!!){
+            for(d in chartList){
+                limitLineInfo.add(d.getLimitLineData(data))
+                _isLineImageButton.value = false
+                break
+            }
+        }
+    }
+
+    // 横線情報削除＆追加（アイコンがインアクティブの場合のみ）
+    // 移動させる時に使う想定
+    fun removeAndSetLimitLine(rData: Float, aData: Float){
+        if(currentStockCode.isNotEmpty() && !_isLineImageButton.value!!){
+            removeLimitLine(rData)
+            for(d in chartList) {
+                limitLineInfo.add(d.getLimitLineData(aData))
+                break
+            }
+        }
+    }
+
+    // 横線情報削除
+    fun removeLimitLine(data: Float){
+        var removeIndex = -1
+        for((i,info) in limitLineInfo.withIndex()){
+            if(info.limit == data){
+                removeIndex = i
+            }
+        }
+        if(removeIndex != -1){
+            limitLineInfo.removeAt(removeIndex)
+        }
+    }
+
     // 横線情報取得
     fun getLimitLine(data: Float): LimitLine?{
         // 横線描画OKの場合のみ設定する
         var result: LimitLine? = null
-        if(currentStockCode.isNotEmpty() && _isEditImageButton.value!!){
+        var resultData = 1000000f     // 株価としては、ありえない大きな値にしておく
+        if(currentStockCode.isNotEmpty()){
             for(d in chartList){
                 if(d.stockCode == currentStockCode){
-                    result = d.getLimitLineData(data)
+                    var tmpInfo: LimitLine? = null
+                    // limitLineInfoで、最も近い値の情報を返す
+                    for(line in limitLineInfo){
+                        val tmpAbs = Math.abs(data - line.limit)
+                        if((tmpAbs < resultData) && (tmpAbs < data/20)){
+                            resultData = tmpAbs
+                            tmpInfo = line
+                        }
+                    }
+                    if(resultData < 1000000f){
+                        result = tmpInfo
+                    }
                 }
             }
         }
         return result
+    }
+
+    // 横線表示用のイメージボタン入力
+    fun onClickLineImageButton() {
+        _isLineImageButton.value = !_isLineImageButton.value!!
     }
 
     // チャートデータを設定する
