@@ -1,8 +1,10 @@
 package net.ts_matsu.kabusign.view
 
+import android.graphics.drawable.LevelListDrawable
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.viewmodel.ChartDisplayDialogViewModel
@@ -51,12 +53,9 @@ class ChartDisplayDialogFragment : DialogFragment() {
             it?.verticalMargin = topMarginPixel/resources.displayMetrics.heightPixels
         }
 
-        CommonInfo.debugInfo("aaaa: ${topMarginPixel/resources.displayMetrics.heightPixels}")
-
         // ダイアログの高さ/幅を設定
         // 幅は、Styleで設定できるが、高さがうまく設定できないので、ここで設定する
         dialog?.window?.setLayout(resources.displayMetrics.widthPixels, resources.displayMetrics.heightPixels - topMarginPixel.toInt())
-
 
         // 戻ってきたときかどうかをどうやって区別するのか？
         // （デフォルト値が""なので、それで区別できる）
@@ -64,12 +63,18 @@ class ChartDisplayDialogFragment : DialogFragment() {
             viewModel.setStockItem(args.code)
         }
 
+        // 横線アイコンボタンの監視
+        binding.viewModel!!.ivLineEditState.observe(viewLifecycleOwner) {
+            val ivLineEdit = view.findViewById<ImageView>(R.id.ivLineEdit)
+            ivLineEdit.drawable.level = it
+        }
+
         // チャートデータの監視
         viewModel.chartData.observe(viewLifecycleOwner, Observer {
             showChart()
         })
 
-        // ConbinedChartの初期設定
+        // CombinedChartの初期設定
         val combinedChart = binding.combinedChart
         combinedChart.apply {
             setTouchEnabled(true)
@@ -81,15 +86,17 @@ class ChartDisplayDialogFragment : DialogFragment() {
 
             // チャートタップ時の、横線表示
             setOnTouchListener { view, motionEvent ->
+                var result = false
                 view.performClick()     // これをコールしろとメッセージが出るためコールしている
 
                 // タップ時のみ横線描画
                 if(motionEvent.action == MotionEvent.ACTION_DOWN || motionEvent.action == MotionEvent.ACTION_MOVE){
                     val pointY = getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.x, motionEvent.y).y.toFloat()
-                    showLimitLine(pointY)
+                    result = showLimitLine(pointY)
                 }
-                // true を返すと、ここの処理しかされなくて、Zoom処理とかが行えなかった。
-                false
+                // 横線移動の場合は、resultがtureになることで、グラフ移動を抑止する
+                // true を返すと、ここの処理しかされなくて、Zoom処理とかが行えなかったため、それを利用
+                result
             }
         }
 
@@ -117,7 +124,8 @@ class ChartDisplayDialogFragment : DialogFragment() {
         }
     }
 
-    private fun showLimitLine(yValue: Float){
+    private fun showLimitLine(yValue: Float): Boolean {
+        var result = false
         val value = yValue.toInt().toFloat()    // 整数に変換
         // 横線情報設定
         viewModel.setLimitLine(value)
@@ -126,7 +134,7 @@ class ChartDisplayDialogFragment : DialogFragment() {
         viewModel.getLimitLine(value)?.let {
             val combinedChart = binding.combinedChart
             val axisRight = combinedChart.axisRight
-            viewModel.removeAndSetLimitLine(it.limit, value)
+            result = viewModel.removeAndSetLimitLine(it.limit, value)
             axisRight.removeLimitLine(it)
         }
 
@@ -138,5 +146,6 @@ class ChartDisplayDialogFragment : DialogFragment() {
              combinedChart.notifyDataSetChanged()
             combinedChart.invalidate()
         }
+        return result
     }
 }

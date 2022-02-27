@@ -1,5 +1,6 @@
 package net.ts_matsu.kabusign.viewmodel
 
+import android.graphics.drawable.LevelListDrawable
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.CombinedData
 import kotlinx.coroutines.launch
+import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.model.StockChart
 import net.ts_matsu.kabusign.model.StockDataManager
 import net.ts_matsu.kabusign.util.CommonInfo
@@ -26,8 +28,12 @@ class ChartDisplayDialogViewModel : ViewModel() {
     val dateData: LiveData<MutableList<String>> get() = _dateData
 
     // 横線描画用アイコンの状態
-    private val _isLineImageButton = MutableLiveData<Boolean>(false)
-    val isLineImageButton: LiveData<Boolean> get() = _isLineImageButton
+    val ivLineEditState = MutableLiveData(0)    // 横線アイコンの状態
+    private val ivLineEditStateNone = 0
+    private val ivLineEditStateAdd = 1
+    private val ivLineEditStateMode = 2
+    private val ivLineEditStateDelete = 3
+    private val ivMaxState = 3
 
     // チャート更新時のプログレスバー表示
     private val _isUpdateProgress = MutableLiveData<Boolean>(false)
@@ -62,12 +68,12 @@ class ChartDisplayDialogViewModel : ViewModel() {
         }
     }
 
-    // 横線追加（アイコンがアクティブの場合のみ）
+    // 横線追加
     fun setLimitLine(data: Float) {
-        if(currentStockCode.isNotEmpty() && _isLineImageButton.value!!){
+        if(currentStockCode.isNotEmpty() && (ivLineEditState.value!! == ivLineEditStateAdd)){
             for(d in chartList){
                 limitLineInfo.add(d.getLimitLineData(data))
-                _isLineImageButton.value = false
+                ivLineEditState.value  = ivLineEditStateNone
                 break
             }
         }
@@ -75,14 +81,17 @@ class ChartDisplayDialogViewModel : ViewModel() {
 
     // 横線情報削除＆追加（アイコンがインアクティブの場合のみ）
     // 移動させる時に使う想定
-    fun removeAndSetLimitLine(rData: Float, aData: Float){
-        if(currentStockCode.isNotEmpty() && !_isLineImageButton.value!!){
+    fun removeAndSetLimitLine(rData: Float, aData: Float): Boolean {
+        var result = false
+        if(currentStockCode.isNotEmpty() && ivLineEditState.value!! == ivLineEditStateMode){
             removeLimitLine(rData)
             for(d in chartList) {
                 limitLineInfo.add(d.getLimitLineData(aData))
+                result = true
                 break
             }
         }
+        return result
     }
 
     // 横線情報削除
@@ -107,10 +116,10 @@ class ChartDisplayDialogViewModel : ViewModel() {
             for(d in chartList){
                 if(d.stockCode == currentStockCode){
                     var tmpInfo: LimitLine? = null
-                    // limitLineInfoで、最も近い値の情報を返す
+                    // limitLineInfoで、最も近い値の情報を返す（位置の誤差が1%未満）
                     for(line in limitLineInfo){
                         val tmpAbs = Math.abs(data - line.limit)
-                        if((tmpAbs < resultData) && (tmpAbs < data/20)){
+                        if((tmpAbs < resultData) && (tmpAbs < data/100)){
                             resultData = tmpAbs
                             tmpInfo = line
                         }
@@ -126,7 +135,12 @@ class ChartDisplayDialogViewModel : ViewModel() {
 
     // 横線表示用のイメージボタン入力
     fun onClickLineImageButton() {
-        _isLineImageButton.value = !_isLineImageButton.value!!
+        if(ivLineEditState.value!! < ivMaxState){
+            ivLineEditState.value = ivLineEditState.value!! + 1
+        }
+        else {
+            ivLineEditState.value = 0
+        }
     }
 
     // チャートデータを設定する
