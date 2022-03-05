@@ -28,10 +28,11 @@ class ChartDisplayDialogViewModel : ViewModel() {
     val dateData: LiveData<MutableList<String>> get() = _dateData
 
     // 横線描画用アイコンの状態
+    // 値については、line_ic_list.xml で定義している値と同じにしないといけない
     val ivLineEditState = MutableLiveData(0)    // 横線アイコンの状態
     private val ivLineEditStateNone = 0
     private val ivLineEditStateAdd = 1
-    private val ivLineEditStateMode = 2
+    private val ivLineEditStateMove = 2
     private val ivLineEditStateDelete = 3
     private val ivMaxState = 3
 
@@ -79,17 +80,21 @@ class ChartDisplayDialogViewModel : ViewModel() {
         }
     }
 
-    // 横線情報削除＆追加（アイコンがインアクティブの場合のみ）
-    // 移動させる時に使う想定
+    // 横線情報削除＆追加（アイコンがMOVE or DELETEの時のみ）
+    // 移動させる時、もしくは削除する時に使う想定
     fun removeAndSetLimitLine(rData: Float, aData: Float): Boolean {
         var result = false
-        if(currentStockCode.isNotEmpty() && ivLineEditState.value!! == ivLineEditStateMode){
+        if(currentStockCode.isNotEmpty() &&
+            (ivLineEditState.value!! == ivLineEditStateMove || ivLineEditState.value!! == ivLineEditStateDelete)){
             removeLimitLine(rData)
-            for(d in chartList) {
-                limitLineInfo.add(d.getLimitLineData(aData))
-                result = true
-                break
+            // MOVE の場合、追加処理を行う
+            if(ivLineEditState.value!! == ivLineEditStateMove){
+                for(d in chartList) {
+                    limitLineInfo.add(d.getLimitLineData(aData))
+                    break
+                }
             }
+            result = true
         }
         return result
     }

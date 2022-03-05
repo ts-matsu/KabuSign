@@ -127,14 +127,15 @@ class ChartDisplayDialogFragment : DialogFragment() {
     private fun showLimitLine(yValue: Float): Boolean {
         var result = false
         val value = yValue.toInt().toFloat()    // 整数に変換
-        // 横線情報設定
+
+        // 横線情報設定（アイコンが ADD の時のみ）
         viewModel.setLimitLine(value)
 
-        // すでに表示されている横線削除して、今の値で追加（アイコンがOFFの場合のみ）
+        // すでに表示されている横線削除して、今の値で追加（アイコンが MOVE の場合のみ）
         viewModel.getLimitLine(value)?.let {
             val combinedChart = binding.combinedChart
             val axisRight = combinedChart.axisRight
-            result = viewModel.removeAndSetLimitLine(it.limit, value)
+            result = viewModel.removeAndSetLimitLine(it.limit, value)   // MOVE の場合のみ処理される
             axisRight.removeLimitLine(it)
         }
 
@@ -143,7 +144,7 @@ class ChartDisplayDialogFragment : DialogFragment() {
             val combinedChart = binding.combinedChart
             val axisRight = combinedChart.axisRight
             axisRight.addLimitLine(it)
-             combinedChart.notifyDataSetChanged()
+            combinedChart.notifyDataSetChanged()
             combinedChart.invalidate()
         }
         return result
