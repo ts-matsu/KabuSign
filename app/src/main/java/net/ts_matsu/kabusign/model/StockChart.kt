@@ -6,6 +6,7 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.util.CommonInfo
@@ -36,6 +37,28 @@ class StockChart(code: String) {
         combinedData.setData(maData)
 
         return combinedData
+    }
+
+    fun getVolumeChartData(stockData: MutableList<StockData>): BarData {
+        fun getData(): MutableList<Int>{
+            val data = mutableListOf<Int>()
+            for(d in stockData){
+                data.add(d.volume)
+            }
+            return data
+        }
+        val entryList = mutableListOf<BarEntry>()
+        for((i,d) in getData().withIndex()){
+            entryList.add(BarEntry(i.toFloat(), d.toFloat()))
+        }
+        val barDataSets = mutableListOf<IBarDataSet>()
+        val barDataSet = BarDataSet(entryList, "volume char").apply {
+            color = ResourceApp.instance.getColor(R.color.colorCandleSkyBlue)
+            setDrawValues(false)     // 各値のラベルを表示しない
+        }
+
+        barDataSets.add(barDataSet)
+        return BarData(barDataSets)
     }
 
     // 横線用のLimitLineデータ取得

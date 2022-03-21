@@ -1,13 +1,12 @@
 package net.ts_matsu.kabusign.view
 
-import android.graphics.drawable.LevelListDrawable
-import androidx.lifecycle.ViewModelProvider
+import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import net.ts_matsu.kabusign.R
-import net.ts_matsu.kabusign.viewmodel.ChartDisplayDialogViewModel
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -16,9 +15,12 @@ import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.Runnable
+import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.databinding.ChartDisplayDialogFragmentBinding
-import net.ts_matsu.kabusign.databinding.FragmentStockNotificationDialogBinding
 import net.ts_matsu.kabusign.util.CommonInfo
+import net.ts_matsu.kabusign.viewmodel.ChartDisplayDialogViewModel
 
 class ChartDisplayDialogFragment : DialogFragment() {
     private val cName = ConditionMainFragment::class.java.simpleName
@@ -26,6 +28,18 @@ class ChartDisplayDialogFragment : DialogFragment() {
     private val viewModel = ChartDisplayDialogViewModel()
     private lateinit var binding: ChartDisplayDialogFragmentBinding
     private val args: ChartDisplayDialogFragmentArgs by navArgs()
+
+    private val flickHandler = Handler(Looper.getMainLooper())
+    private val flickRunner = object : Runnable {
+        override fun run() {
+            CommonInfo.debugInfo("flickRunner")
+            // 前回と位置が変わっていなければ終了
+            if(binding.combinedChart.lowestVisibleX != binding.volumeChart.lowestVisibleX){
+                binding.volumeChart.moveViewToX(binding.combinedChart.lowestVisibleX)
+                flickHandler.postDelayed(this, 100)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +86,22 @@ class ChartDisplayDialogFragment : DialogFragment() {
         // チャートデータの監視
         viewModel.chartData.observe(viewLifecycleOwner, Observer {
             showChart()
+            showVolumeChar()
         })
 
         // CombinedChartの初期設定
         val combinedChart = binding.combinedChart
+        var volumeScaleX = 1.0f
+        var combinedScaleX = 1.0f
         combinedChart.apply {
             setTouchEnabled(true)
+            axisRight.valueFormatter = MyYAxisValueFormatter()
+            axisRight.typeface = Typeface.MONOSPACE
+//            axisRight.typeface = Typeface.createFromAsset(context.assets, "fonts/rounded_mgenplus_1c_bold.ttf")
             isDragEnabled = true
             isScaleXEnabled = true
             isScaleYEnabled = true
+            isDoubleTapToZoomEnabled = false
             drawOrder = arrayOf(CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE)               // 移動平均線を後から描画する
             setNoDataText("")
 
@@ -93,11 +114,36 @@ class ChartDisplayDialogFragment : DialogFragment() {
                 if(motionEvent.action == MotionEvent.ACTION_DOWN || motionEvent.action == MotionEvent.ACTION_MOVE){
                     val pointY = getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.x, motionEvent.y).y.toFloat()
                     result = showLimitLine(pointY)
+
                 }
+
+                // フリック動作用処理
+                // 離した時点から、100ms 毎にローソク足チャートの位置をチェックし、
+                // 出来高チャートに反映させる
+                if(motionEvent.action == MotionEvent.ACTION_UP){
+                    flickHandler.postDelayed(flickRunner, 100)
+                }
+
+                // 出来高チャートにX軸のズーム値を設定する
+                volumeScaleX = (scaleX / combinedScaleX)
+                combinedScaleX = scaleX
+                binding.volumeChart.zoom(volumeScaleX, 0f ,0f, 0f)
+                binding.volumeChart.moveViewToX(binding.combinedChart.lowestVisibleX)
+
                 // 横線移動の場合は、resultがtureになることで、グラフ移動を抑止する
                 // true を返すと、ここの処理しかされなくて、Zoom処理とかが行えなかったため、それを利用
                 result
             }
+        }
+
+        // 出来高チャートの初期設定
+        val volumeChart = binding.volumeChart
+        volumeChart.apply {
+            setNoDataText("")
+            axisRight.typeface = Typeface.MONOSPACE
+            axisRight.valueFormatter = MyYAxisValueFormatter()
+            isScaleXEnabled = true
+            setTouchEnabled(false)
         }
 
         // Cancelボタンを監視する
@@ -112,15 +158,35 @@ class ChartDisplayDialogFragment : DialogFragment() {
         CommonInfo.debugInfo("$cName: showChart")
         val combinedChart = binding.combinedChart
         combinedChart.apply {
-            combinedChart.description.text = ""
-            combinedChart.legend.isEnabled = false                      // 凡例は表示しない
-            combinedChart.xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
-            combinedChart.axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
-            combinedChart.xAxis.setLabelCount(5,false)      // X軸の表示ラベル数
-            combinedChart.data = viewModel.chartData.value
-            combinedChart.xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
-            combinedChart.notifyDataSetChanged()
-            combinedChart.invalidate()
+            description.text = ""
+            legend.isEnabled = false                      // 凡例は表示しない
+            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
+            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
+            xAxis.setLabelCount(5,false)        // X軸の表示ラベル数(表示はしないが、出来高チャートとグリッド線を合わせるために設定しておく）
+            xAxis.setDrawLabels(false)                    // X軸ラベルなし
+            data = viewModel.chartData.value
+            xAxis.axisMinimum = -0.5f
+            xAxis.axisMaximum = (viewModel.dateData.value!!.size - 1) + 0.5f
+            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
+            notifyDataSetChanged()
+            invalidate()
+        }
+    }
+
+    // 出来高チャート表示
+    private fun showVolumeChar()  {
+        val barChart = binding.volumeChart
+        barChart.apply {
+            description.text = ""
+            legend.isEnabled = false                      // 凡例は表示しない
+            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
+            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
+            xAxis.setLabelCount(5,false)       // X軸の表示ラベル数
+            axisRight.setLabelCount(3, false)
+            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
+            data = viewModel.volumeChartData.value
+            notifyDataSetChanged()
+            invalidate()
         }
     }
 
@@ -149,4 +215,26 @@ class ChartDisplayDialogFragment : DialogFragment() {
         }
         return result
     }
+
+    // 株価チャート、出来高チャートの右側のY軸位置を合わせるため、
+    //
+    class MyYAxisValueFormatter : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            var result = ""
+            when (value.toInt().toString(10).length) {
+                1 -> result = value.toInt().toString() + "_______"
+                2 -> result = value.toInt().toString() + "______"
+                3 -> result = value.toInt().toString() + "_____"
+                4 -> result = value.toInt().toString() + "____"
+                5 -> result = value.toInt().toString() + "___"
+                6 -> result = value.toInt().toString() + "__"
+                7 -> result = value.toInt().toString() + "_"
+                8 -> result = value.toInt().toString() + ""
+            }
+            return result
+//            return "%08d".format(value.toInt())
+        }
+    }
+
+
 }

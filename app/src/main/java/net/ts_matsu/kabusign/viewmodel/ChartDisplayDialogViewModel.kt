@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.components.LimitLine
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.CombinedData
 import kotlinx.coroutines.launch
 import net.ts_matsu.kabusign.R
@@ -22,6 +23,10 @@ class ChartDisplayDialogViewModel : ViewModel() {
     // チャートデータ
     private val _chartData = MutableLiveData<CombinedData>()
     val chartData: LiveData<CombinedData> get() = _chartData
+
+    // 出来高チャートデータ
+    private val _volumeChartData = MutableLiveData<BarData>()
+    val volumeChartData: LiveData<BarData> get() = _volumeChartData
 
     // チャートデータに対応した日付データ
     private val _dateData = MutableLiveData<MutableList<String>>()
@@ -161,11 +166,15 @@ class ChartDisplayDialogViewModel : ViewModel() {
             val stockChart = StockChart(currentStockCode)
             chartList.add(stockChart)
 
+            // 出来高データを先に設定（チャートデータをFragmentで監視しているため）
+            _volumeChartData.value = stockChart.getVolumeChartData(data)
+
             // グラフ情報更新
             CommonInfo.debugInfo("size: ${data.size}")
             _dateData.value = stockChart.getDateList(data)
             _chartData.value = stockChart.getChartData(data)
             CommonInfo.debugInfo("$cName: setChartData2")
+
             _isUpdateProgress.value = false        // プログレスバー終了
         }
         CommonInfo.debugInfo("$cName: setChartData3")
