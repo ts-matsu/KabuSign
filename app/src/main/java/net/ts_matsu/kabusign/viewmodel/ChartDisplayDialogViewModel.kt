@@ -18,7 +18,11 @@ import net.ts_matsu.kabusign.util.CommonInfo
 class ChartDisplayDialogViewModel : ViewModel() {
     private val cName = ChartDisplayDialogViewModel::class.java.simpleName
 
-    val requireClose = MutableLiveData(false)   // CANCELがタップされて、ダイアログを閉じることを通知
+    val minChartData = 10f   // 画面表示するチャートデータの最小数
+    val yAxisLabelWidth = 20f // Y軸ラベル領域の幅(dp)
+
+    // CANCELがタップされて、ダイアログを閉じることを通知
+    val requireClose = MutableLiveData(false)
 
     // チャートデータ
     private val _chartData = MutableLiveData<CombinedData>()

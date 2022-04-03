@@ -95,9 +95,15 @@ class ChartDisplayDialogFragment : DialogFragment() {
         var combinedScaleX = 1.0f
         combinedChart.apply {
             setTouchEnabled(true)
-            axisRight.valueFormatter = MyYAxisValueFormatter()
-            axisRight.typeface = Typeface.MONOSPACE
-//            axisRight.typeface = Typeface.createFromAsset(context.assets, "fonts/rounded_mgenplus_1c_bold.ttf")
+            description.text = ""
+            legend.isEnabled = false                      // 凡例は表示しない
+            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
+            xAxis.setLabelCount(5,false)        // X軸の表示ラベル数(表示はしないが、出来高チャートとグリッド線を合わせるために設定しておく）
+            xAxis.setDrawLabels(false)                    // X軸ラベルなし
+            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
+            axisRight.maxWidth = viewModel.yAxisLabelWidth * resources.displayMetrics.density
+            axisRight.minWidth = viewModel.yAxisLabelWidth * resources.displayMetrics.density
+            axisRight.textSize = 4.0f * resources.displayMetrics.scaledDensity
             isDragEnabled = true
             isScaleXEnabled = true
             isScaleYEnabled = true
@@ -140,8 +146,15 @@ class ChartDisplayDialogFragment : DialogFragment() {
         val volumeChart = binding.volumeChart
         volumeChart.apply {
             setNoDataText("")
-            axisRight.typeface = Typeface.MONOSPACE
-            axisRight.valueFormatter = MyYAxisValueFormatter()
+            description.text = ""
+            legend.isEnabled = false                      // 凡例は表示しない
+            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
+            xAxis.setLabelCount(5,false)       // X軸の表示ラベル数
+            axisRight.maxWidth = viewModel.yAxisLabelWidth * resources.displayMetrics.density
+            axisRight.minWidth = viewModel.yAxisLabelWidth * resources.displayMetrics.density
+            axisRight.textSize = 3.0f * resources.displayMetrics.scaledDensity
+            axisRight.setLabelCount(3, false)  // Y軸のラベル数
+            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
             isScaleXEnabled = true
             setTouchEnabled(false)
         }
@@ -158,16 +171,16 @@ class ChartDisplayDialogFragment : DialogFragment() {
         CommonInfo.debugInfo("$cName: showChart")
         val combinedChart = binding.combinedChart
         combinedChart.apply {
-            description.text = ""
-            legend.isEnabled = false                      // 凡例は表示しない
-            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
-            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
-            xAxis.setLabelCount(5,false)        // X軸の表示ラベル数(表示はしないが、出来高チャートとグリッド線を合わせるために設定しておく）
-            xAxis.setDrawLabels(false)                    // X軸ラベルなし
             data = viewModel.chartData.value
+
+            // 当日、開始日 のローソク足が半分表示になるのを回避する設定
             xAxis.axisMinimum = -0.5f
             xAxis.axisMaximum = (viewModel.dateData.value!!.size - 1) + 0.5f
+
+            // X軸の表示フォーマット設定
             xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
+
+            setVisibleXRangeMinimum(viewModel.minChartData)    // 表示する最小データ数を10にしておく（データセットするタイミングで設定する必要があるっぽい）
             notifyDataSetChanged()
             invalidate()
         }
@@ -177,14 +190,12 @@ class ChartDisplayDialogFragment : DialogFragment() {
     private fun showVolumeChar()  {
         val barChart = binding.volumeChart
         barChart.apply {
-            description.text = ""
-            legend.isEnabled = false                      // 凡例は表示しない
-            axisLeft.setDrawLabels(false)                 // Y軸ラベルは右側のみ
-            xAxis.position = XAxis.XAxisPosition.BOTTOM   // X軸ラベルは下側
-            xAxis.setLabelCount(5,false)       // X軸の表示ラベル数
-            axisRight.setLabelCount(3, false)
-            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
             data = viewModel.volumeChartData.value
+
+            // X軸の表示フォーマット設定
+            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.dateData.value)
+
+            setVisibleXRangeMinimum(viewModel.minChartData)    // 表示する最小データ数を10にしておく（データセットするタイミングで設定する必要があるっぽい）
             notifyDataSetChanged()
             invalidate()
         }
@@ -215,26 +226,4 @@ class ChartDisplayDialogFragment : DialogFragment() {
         }
         return result
     }
-
-    // 株価チャート、出来高チャートの右側のY軸位置を合わせるため、
-    //
-    class MyYAxisValueFormatter : ValueFormatter() {
-        override fun getFormattedValue(value: Float): String {
-            var result = ""
-            when (value.toInt().toString(10).length) {
-                1 -> result = value.toInt().toString() + "_______"
-                2 -> result = value.toInt().toString() + "______"
-                3 -> result = value.toInt().toString() + "_____"
-                4 -> result = value.toInt().toString() + "____"
-                5 -> result = value.toInt().toString() + "___"
-                6 -> result = value.toInt().toString() + "__"
-                7 -> result = value.toInt().toString() + "_"
-                8 -> result = value.toInt().toString() + ""
-            }
-            return result
-//            return "%08d".format(value.toInt())
-        }
-    }
-
-
 }
