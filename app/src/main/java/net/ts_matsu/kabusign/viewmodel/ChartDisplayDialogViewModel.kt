@@ -150,7 +150,11 @@ class ChartDisplayDialogViewModel : ViewModel() {
     }
 
     // 指定日のデータ取得
-    fun setStockDataAt(index: Int) {
+    fun setStockDataAt(x: Int) {
+        var index = x
+        if(index == -1){
+            index = stockData.size - 1
+        }
         // 始値
         stockData[index].open.let {
             _openData.value = "%,d".format(it.toInt())
@@ -186,15 +190,15 @@ class ChartDisplayDialogViewModel : ViewModel() {
         // 前日比
         if(index > 0){
             val diff = stockData[index].close - stockData[index-1].close
-            val diffRatio = stockData[index].close / stockData[index-1].close
+            val diffRatio = diff / stockData[index-1].close * 100
             if((stockData[index].close % 1 != 0f) || stockData[index-1].close % 1 != 0f){
                 // 小数点あり
                 _ratioData.value = "0.0 "
                 if(diff > 0) {
-                    _ratioData.value = "+%,.1f ".format(diff)
+                    _ratioData.value = "+%,.2f ".format(diff)
                 }
                 else if( diff < 0){
-                    _ratioData.value = "-%,.1f ".format(diff)
+                    _ratioData.value = "-%,.2f ".format(diff)
                 }
             }
             else{
@@ -202,11 +206,12 @@ class ChartDisplayDialogViewModel : ViewModel() {
                 _ratioData.value = "0 "
                 _colorBeforeRatio.value = R.color.colorBlack
                 if(diff > 0) {
-                    _ratioData.value = "+%,d (+%,.1f".format(diff.toInt(), diffRatio) + "%)"
+                    _ratioData.value = "+%,d (+%,.2f".format(diff.toInt(), diffRatio) + "%)"
                     _colorBeforeRatio.value = R.color.colorRed
                 }
                 else if( diff < 0){
-                    _ratioData.value = "-%,d (-%,.1f".format(diff.toInt(), diffRatio) + "%)"
+                    // マイナスの記号は勝手につくので、意図的に付けない
+                    _ratioData.value = "%,d (%,.2f".format(diff.toInt(), diffRatio) + "%)"
                     _colorBeforeRatio.value = R.color.colorGreen
                 }
             }

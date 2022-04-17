@@ -189,6 +189,7 @@ class ChartDisplayDialogFragment : DialogFragment() {
         val combinedChart = binding.combinedChart
         combinedChart.apply {
             data = viewModel.chartData.value
+            viewModel.setStockDataAt(-1)
 
             // 当日、開始日 のローソク足が半分表示になるのを回避する設定
             xAxis.axisMinimum = -0.5f
