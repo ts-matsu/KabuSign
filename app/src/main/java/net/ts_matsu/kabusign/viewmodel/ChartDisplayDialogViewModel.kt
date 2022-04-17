@@ -1,5 +1,7 @@
 package net.ts_matsu.kabusign.viewmodel
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.LevelListDrawable
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
@@ -12,7 +14,9 @@ import com.github.mikephil.charting.data.CombinedData
 import kotlinx.coroutines.launch
 import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.model.StockChart
+import net.ts_matsu.kabusign.model.StockData
 import net.ts_matsu.kabusign.model.StockDataManager
+import net.ts_matsu.kabusign.model.StockTodayData
 import net.ts_matsu.kabusign.util.CommonInfo
 
 class ChartDisplayDialogViewModel : ViewModel() {
@@ -36,6 +40,29 @@ class ChartDisplayDialogViewModel : ViewModel() {
     private val _dateData = MutableLiveData<MutableList<String>>()
     val dateData: LiveData<MutableList<String>> get() = _dateData
 
+    // 選択日の価格表示色
+    private val _colorDayValue = MutableLiveData(R.color.colorBlack)
+    val colorDayValue: LiveData<Int> get() = _colorDayValue
+
+    // 選択日の前日比表示色
+    private val _colorBeforeRatio = MutableLiveData(R.color.colorBlack)
+    val colorBeforeRatio: LiveData<Int> get() = _colorBeforeRatio
+
+    // 選択日の株価データ
+    private val _openData = MutableLiveData<String>()
+    val openData: LiveData<String> get() = _openData
+    private val _closeData = MutableLiveData<String>()
+    val closeData: LiveData<String> get() = _closeData
+    private val _highData = MutableLiveData<String>()
+    val highData: LiveData<String> get() = _highData
+    private val _lowData = MutableLiveData<String>()
+    val lowData: LiveData<String> get() = _lowData
+    private val _volumeData = MutableLiveData<String>()
+    val volumeData: LiveData<String> get() = _volumeData
+    private val _ratioData = MutableLiveData<String>()
+    val ratioData: LiveData<String> get() = _ratioData
+
+
     // 横線描画用アイコンの状態
     // 値については、line_ic_list.xml で定義している値と同じにしないといけない
     val ivLineEditState = MutableLiveData(0)    // 横線アイコンの状態
@@ -52,6 +79,7 @@ class ChartDisplayDialogViewModel : ViewModel() {
     // 保持する各種データ
     var currentStockCode = ""                                               // 現在表示中の銘柄コード
     private val chartList = mutableListOf<StockChart>()                     // 各銘柄のチャート情報(1銘柄だけになると思うが)
+    private val stockData = mutableListOf<StockData>()                      // 銘柄データ（時系列データ９
 
     // 横線情報
     private val limitLineInfo = mutableListOf<LimitLine>()
@@ -121,6 +149,73 @@ class ChartDisplayDialogViewModel : ViewModel() {
         }
     }
 
+    // 指定日のデータ取得
+    fun setStockDataAt(index: Int) {
+        // 始値
+        stockData[index].open.let {
+            _openData.value = "%,d".format(it.toInt())
+            if(it % 1 != 0f){
+                _openData.value = "%,.1f".format(it)
+            }
+        }
+        // 終値
+        stockData[index].close.let {
+            _closeData.value = "%,d".format(it.toInt())
+            if(it % 1 != 0f){
+                _closeData.value = "%,.1f".format(it)
+            }
+        }
+        // 高値
+        stockData[index].high.let {
+            _highData.value = "%,d".format(it.toInt())
+            if(it % 1 != 0f){
+                _highData.value = "%,.1f".format(it)
+            }
+        }
+        // 安値
+        stockData[index].low.let {
+            _lowData.value = "%,d".format(it.toInt())
+            if(it % 1 != 0f){
+                _lowData.value = "%,.1f".format(it)
+            }
+        }
+        // 出来高
+        stockData[index].volume.let {
+            _volumeData.value = "%,d".format(it)
+        }
+        // 前日比
+        if(index > 0){
+            val diff = stockData[index].close - stockData[index-1].close
+            val diffRatio = stockData[index].close / stockData[index-1].close
+            if((stockData[index].close % 1 != 0f) || stockData[index-1].close % 1 != 0f){
+                // 小数点あり
+                _ratioData.value = "0.0 "
+                if(diff > 0) {
+                    _ratioData.value = "+%,.1f ".format(diff)
+                }
+                else if( diff < 0){
+                    _ratioData.value = "-%,.1f ".format(diff)
+                }
+            }
+            else{
+                // 小数点なし
+                _ratioData.value = "0 "
+                _colorBeforeRatio.value = R.color.colorBlack
+                if(diff > 0) {
+                    _ratioData.value = "+%,d (+%,.1f".format(diff.toInt(), diffRatio) + "%)"
+                    _colorBeforeRatio.value = R.color.colorRed
+                }
+                else if( diff < 0){
+                    _ratioData.value = "-%,d (-%,.1f".format(diff.toInt(), diffRatio) + "%)"
+                    _colorBeforeRatio.value = R.color.colorGreen
+                }
+            }
+        }
+        else {
+            _ratioData.value = "- (-.-%)"
+        }
+    }
+
     // 横線情報取得
     fun getLimitLine(data: Float): LimitLine?{
         // 横線描画OKの場合のみ設定する
@@ -165,18 +260,18 @@ class ChartDisplayDialogViewModel : ViewModel() {
             _isUpdateProgress.value = true        // プログレスバー開始
 
             val stockDataManager = StockDataManager()
-            val data = stockDataManager.getDataList(currentStockCode, isUpdate)
+            stockData.addAll(stockDataManager.getDataList(currentStockCode, isUpdate))
             // chartList に追加
             val stockChart = StockChart(currentStockCode)
             chartList.add(stockChart)
 
             // 出来高データを先に設定（チャートデータをFragmentで監視しているため）
-            _volumeChartData.value = stockChart.getVolumeChartData(data)
+            _volumeChartData.value = stockChart.getVolumeChartData(stockData)
 
             // グラフ情報更新
-            CommonInfo.debugInfo("size: ${data.size}")
-            _dateData.value = stockChart.getDateList(data)
-            _chartData.value = stockChart.getChartData(data)
+            CommonInfo.debugInfo("size: ${stockData.size}")
+            _dateData.value = stockChart.getDateList(stockData)
+            _chartData.value = stockChart.getChartData(stockData)
             CommonInfo.debugInfo("$cName: setChartData2")
 
             _isUpdateProgress.value = false        // プログレスバー終了

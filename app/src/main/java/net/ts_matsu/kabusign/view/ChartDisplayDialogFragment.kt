@@ -14,8 +14,11 @@ import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Runnable
 import net.ts_matsu.kabusign.R
 import net.ts_matsu.kabusign.databinding.ChartDisplayDialogFragmentBinding
@@ -140,6 +143,20 @@ class ChartDisplayDialogFragment : DialogFragment() {
                 // true を返すと、ここの処理しかされなくて、Zoom処理とかが行えなかったため、それを利用
                 result
             }
+
+            // チャートタップ時に、その日の価格等の表示を切り替える
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onNothingSelected() {
+                }
+
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    e?.let {
+                        val dateList = viewModel.dateData.value
+                        CommonInfo.debugInfo("aaaaaaa: ${e.x.toInt()}")
+                        viewModel.setStockDataAt(e.x.toInt())
+                    }
+                }
+            })
         }
 
         // 出来高チャートの初期設定

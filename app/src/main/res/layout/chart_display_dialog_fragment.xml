@@ -21,10 +21,135 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@string/label_high_value"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@string/label_low_value"/>
+            </LinearLayout>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvHighValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@{viewModel.highData}"/>
+
+                <TextView
+                    android:id="@+id/tvLowValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@{viewModel.lowData}"/>
+            </LinearLayout>
+            <View
+                android:layout_width="8dp"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@string/label_open_value"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@string/label_close_value"/>
+            </LinearLayout>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvOpenValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@{viewModel.openData}"/>
+
+                <TextView
+                    android:id="@+id/tvCloseValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                    android:text="@{viewModel.closeData}"/>
+            </LinearLayout>
+            <View
+                android:layout_width="8dp"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                        android:text="@string/label_volume"/>
+                    <TextView
+                        android:id="@+id/tvVolumeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:textSize="12sp"
+                        android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                        android:text="@{viewModel.volumeData}"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvBeforeRatio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@{context.getColor(viewModel.colorBeforeRatio)}"
+                    android:text="@{viewModel.ratioData}"/>
+            </LinearLayout>
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
+
             <ImageView
                 android:id="@+id/ivLineEdit"
                 android:layout_width="wrap_content"
