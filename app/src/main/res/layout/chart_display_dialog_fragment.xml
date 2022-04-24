@@ -21,6 +21,15 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:textSize="12sp"
+                android:textColor="@{context.getColor(viewModel.colorDayValue)}"
+                android:text="@{viewModel.selectedDate}"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

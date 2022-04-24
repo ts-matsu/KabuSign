@@ -61,6 +61,8 @@ class ChartDisplayDialogViewModel : ViewModel() {
     val volumeData: LiveData<String> get() = _volumeData
     private val _ratioData = MutableLiveData<String>()
     val ratioData: LiveData<String> get() = _ratioData
+    private val _selectedDate = MutableLiveData<String>()
+    val selectedDate: LiveData<String> get() = _selectedDate
 
 
     // 横線描画用アイコンの状態
@@ -154,6 +156,10 @@ class ChartDisplayDialogViewModel : ViewModel() {
         var index = x
         if(index == -1){
             index = stockData.size - 1
+        }
+        // 日付
+        stockData[index].date.let {
+            _selectedDate.value = "${it.substring(4,6)}/${it.substring(6)}"
         }
         // 始値
         stockData[index].open.let {
