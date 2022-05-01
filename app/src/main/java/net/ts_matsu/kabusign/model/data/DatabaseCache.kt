@@ -1,9 +1,6 @@
 package net.ts_matsu.kabusign.model.data
 
-import net.ts_matsu.kabusign.model.data.db.entity.CandleConditionEntity
-import net.ts_matsu.kabusign.model.data.db.entity.ConditionKindEntity
-import net.ts_matsu.kabusign.model.data.db.entity.MonitoredStockEntity
-import net.ts_matsu.kabusign.model.data.db.entity.PriceDesignationEntity
+import net.ts_matsu.kabusign.model.data.db.entity.*
 
 // データベース保存時のキャッシュクラス
 class DatabaseCache {
@@ -13,6 +10,7 @@ class DatabaseCache {
         val monitoredStockEntityList = mutableListOf<MonitoredStockEntity>()
         val conditionKindEntityList = mutableListOf<ConditionKindEntity>()
         val candleConditionEntityList = mutableListOf<CandleConditionEntity>()
+        val alarmEntityList = mutableListOf<AlarmEntity>()
     }
 
     fun addPriceDesignationEntity(entity: PriceDesignationEntity) {
@@ -45,6 +43,9 @@ class DatabaseCache {
             candleConditionEntityList.add(entity)
         }
     }
+    fun addAlarmEntity(entity: AlarmEntity) {
+        alarmEntityList.add(entity)
+    }
 
     fun getPriceDesignationEntityList(): MutableList<PriceDesignationEntity> {
         return priceDesignationEntityList;
@@ -58,6 +59,9 @@ class DatabaseCache {
     fun getCandleConditionEntityList(): MutableList<CandleConditionEntity> {
         return candleConditionEntityList;
     }
+    fun getAlarmEntityList(): MutableList<AlarmEntity> {
+        return alarmEntityList;
+    }
 
     fun clearPriceDesignationEntityList() {
         priceDesignationEntityList.clear()
@@ -70,5 +74,8 @@ class DatabaseCache {
     }
     fun clearCandleConditionEntityList() {
         candleConditionEntityList.clear()
+    }
+    fun clearAlarmEntityList() {
+        alarmEntityList.clear()
     }
 }
