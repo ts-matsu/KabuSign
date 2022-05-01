@@ -82,6 +82,9 @@
         <action
             android:id="@+id/action_conditionMainFragment_to_priceInputDialogFragment"
             app:destination="@id/priceInputDialogFragment" />
+        <action
+            android:id="@+id/action_conditionMainFragment_to_chartDisplayDialogFragment"
+            app:destination="@id/chartDisplayDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/priceInputDialogFragment"
@@ -92,5 +95,15 @@
             android:name="value"
             app:argType="integer"
             android:defaultValue="0" />
+    </dialog>
+    <dialog
+        android:id="@+id/chartDisplayDialogFragment"
+        android:name="net.ts_matsu.kabusign.view.ChartDisplayDialogFragment"
+        android:label="chart_display_dialog_fragment"
+        tools:layout="@layout/chart_display_dialog_fragment" >
+        <argument
+            android:name="code"
+            app:argType="string"
+            android:defaultValue=""/>
     </dialog>
 </navigation>

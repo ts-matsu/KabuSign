@@ -71,6 +71,14 @@ class ConditionMainFragment : Fragment() {
             CommonInfo.debugInfo("$cName: setFragmentResultListener(${bundle.getInt("value")})")
         }
 
+        // チャート表示
+        viewModel.chartDisplay.observe(viewLifecycleOwner) {
+            if (it) {
+                val action = ConditionMainFragmentDirections.actionConditionMainFragmentToChartDisplayDialogFragment(viewModel.getCode())
+                findNavController().navigate(action)
+            }
+        }
+
     }
 
 }

@@ -85,6 +85,10 @@ class MainFragment : Fragment() {
                     val pointY = getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.x, motionEvent.y).y.toFloat()
                     showLimitLine(pointY)
                 }
+                if(motionEvent.action == MotionEvent.ACTION_MOVE){
+                    val pointY = getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.x, motionEvent.y).y.toFloat()
+                    showLimitLine(pointY)
+                }
                 // true を返すと、ここの処理しかされなくて、Zoom処理とかが行えなかった。
                 false
             }
