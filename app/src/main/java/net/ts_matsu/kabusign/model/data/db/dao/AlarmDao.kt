@@ -13,4 +13,7 @@ interface AlarmDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(entity: AlarmEntity)
+
+    @Delete
+    fun delete(entity: AlarmEntity)
 }

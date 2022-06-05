@@ -53,9 +53,14 @@ class MonitoredStockAdapter(context: Context, resource: Int, items: List<Monitor
                 item.isClickItem = 1
                 false
             }
-            val info = view!!.findViewById<ImageView>(R.id.ibMonitoredInfo)
+            val info = view!!.findViewById<ImageView>(R.id.ivMonitoredInfo)
             info.setOnTouchListener { view, motionEvent ->
                 item.isClickItem = 2
+                false
+            }
+            val alarm = view!!.findViewById<ImageView>(R.id.ivMonitoredAlarm)
+            alarm.setOnTouchListener { view, motionEvent ->
+                item.isClickItem = 3
                 false
             }
         }

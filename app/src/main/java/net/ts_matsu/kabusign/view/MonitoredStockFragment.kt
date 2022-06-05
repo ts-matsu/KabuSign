@@ -67,6 +67,17 @@ class MonitoredStockFragment : Fragment() {
             }
         }
 
+        // アラーム設定フラグメントへ移動
+        binding.viewModel!!.selectedAlarm.observe(viewLifecycleOwner) {
+            if(it){
+                val action = MonitoredStockFragmentDirections.actionMonitoredStockFragmentToConditionAlarm(
+                    code = binding.viewModel!!.selectingCode
+                )
+                findNavController().navigate(action)
+                binding.viewModel!!.selectedAlarm.value = false
+            }
+        }
+
         // Cancelボタンを監視する
         binding.viewModel!!.requireClose.observe(viewLifecycleOwner) {
             if(it) findNavController().popBackStack()
