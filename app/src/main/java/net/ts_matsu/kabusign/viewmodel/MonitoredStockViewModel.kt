@@ -24,6 +24,7 @@ class MonitoredStockViewModel: ViewModel() {
 
     val conditionKindList = mutableListOf<String>()
     val selectedConditionKind = MutableLiveData(false)
+    val selectedAlarm = MutableLiveData(false)
 
     private val stockList: List<StockInfo>
 
@@ -117,7 +118,8 @@ class MonitoredStockViewModel: ViewModel() {
                 }
             }
             3 -> {
-                println("3333333333333333")
+                // アラーム設定アイコンをタップされた場合
+                selectedAlarm.value = true
             }
             4 -> {
                 println("4444444444444444")

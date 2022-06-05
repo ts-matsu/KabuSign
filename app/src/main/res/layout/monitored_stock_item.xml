@@ -29,7 +29,7 @@
             android:text="監視銘柄（株）"/>
 
         <ImageView
-            android:id="@+id/ibMonitoredInfo"
+            android:id="@+id/ivMonitoredInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -38,7 +38,7 @@
             android:background="#10000000"
             app:srcCompat="@drawable/ic_candle_48"/>
         <ImageView
-            android:id="@+id/ibMonitoredNotify"
+            android:id="@+id/ivMonitoredAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -46,7 +46,7 @@
             android:background="#00000000"
             app:srcCompat="@drawable/ic_notify"/>
         <ImageView
-            android:id="@+id/ibMonitoredRemove"
+            android:id="@+id/ivMonitoredRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

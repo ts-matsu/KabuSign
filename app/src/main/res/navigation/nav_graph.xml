@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_monitoredStockFragment_to_conditionMainFragment"
             app:destination="@id/conditionMainFragment" />
+        <action
+            android:id="@+id/action_monitoredStockFragment_to_conditionAlarm"
+            app:destination="@id/conditionAlarm" />
     </fragment>
 
     <dialog
@@ -106,4 +109,12 @@
             app:argType="string"
             android:defaultValue=""/>
     </dialog>
+    <fragment
+        android:id="@+id/conditionAlarm"
+        android:name="net.ts_matsu.kabusign.view.ConditionAlarm"
+        android:label="ConditionAlarm" >
+        <argument
+            android:name="code"
+            app:argType="string" />
+    </fragment>
 </navigation>
