@@ -26,6 +26,7 @@
             />
 
         <LinearLayout
+            android:id="@+id/llAlarmTopFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -125,6 +126,146 @@
                     android:textColor="@{context.getColor(viewModel.tvValueColor)}"
                     android:textSize="18sp"/>
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/llAlarmTopFrame">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:text="設定した条件になった時の通知"
+                android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                android:textSize="18sp"
+                android:layoutDirection="rtl"
+                app:switchPadding="4dp"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
+                <RadioButton
+                    android:id="@+id/rbToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:button="@drawable/custom_radiobutton2"
+
+                    android:text=" 本日　2022年12月24日"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/rbYesterday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="4dp"
+                    android:button="@drawable/custom_radiobutton2"
+                    android:text=" 翌日　2022年12月25日"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:checked="false"/>
+                <RadioButton
+                    android:id="@+id/rbOneWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="4dp"
+                    android:button="@drawable/custom_radiobutton2"
+                    android:text=" １週間"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:checked="false"/>
+                <TextView
+                    android:id="@+id/tvOneWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="32dp"
+                    android:gravity="center|right"
+                    android:text="2022年12月22日 ～ 2022年12月29日"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:visibility="visible"/>
+                <RadioButton
+                    android:id="@+id/rbPeriod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="4dp"
+                    android:button="@drawable/custom_radiobutton2"
+                    android:text=" 期間指定"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                    android:checked="false"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="32dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:gravity="center|right"
+                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                        android:text="開始日　2022年1月1日"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:gravity="center|right"
+                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                        android:text="終了日　2022年3月31日"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </RadioGroup>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:text="時刻を指定しての通知"
+                android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                android:textSize="18sp"
+                android:layoutDirection="rtl"
+                app:switchPadding="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="48dp"
+                android:gravity="center|right"
+                android:text="14:50"
+                android:textSize="20sp"
+                android:fontFamily="@font/rounded_mgenplus_1c_bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:background="#00000000"
+            android:textSize="18sp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="    OK    "
+            android:background="#00000000"
+            android:textSize="18sp"/>
         </LinearLayout>
 
 
