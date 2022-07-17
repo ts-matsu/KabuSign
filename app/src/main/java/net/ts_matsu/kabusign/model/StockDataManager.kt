@@ -53,7 +53,6 @@ class StockDataManager {
             }
         }
         else{
-            CommonInfo.debugInfo("$cName: 444")
             // キャッシュされてない場合は、最新データをダウンロードしてキャッシュする
             val stockData = download.get(code, "")
             stockDataList[code] = stockData.first

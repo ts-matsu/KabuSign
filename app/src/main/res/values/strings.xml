@@ -93,6 +93,15 @@
     <string name="label_volume">出来高</string>
     <string name="label_before_ratio">前日比</string>
 
+    <string name="label_today">本日</string>
+    <string name="label_tomorrow">翌日</string>
+    <string name="label_year">年</string>
+    <string name="label_month">月</string>
+    <string name="label_days">日</string>
+
+    <string name="label_period_start">開始日</string>
+    <string name="label_period_end">終了日</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

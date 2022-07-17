@@ -116,5 +116,22 @@
         <argument
             android:name="code"
             app:argType="string" />
+        <action
+            android:id="@+id/action_conditionAlarm_to_dateSelectPickerFragment"
+            app:destination="@id/dateSelectPickerFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/dateSelectPickerFragment"
+        android:name="net.ts_matsu.kabusign.view.library.DateSelectPickerFragment"
+        android:label="DateSelectPickerFragment" >
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <argument
+            android:name="month"
+            app:argType="integer" />
+        <argument
+            android:name="day"
+            app:argType="integer" />
+    </dialog>
 </navigation>

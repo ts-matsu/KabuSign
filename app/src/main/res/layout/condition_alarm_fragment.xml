@@ -140,7 +140,7 @@
                 android:layout_marginStart="16dp"
                 android:text="設定した条件になった時の通知"
                 android:fontFamily="@font/rounded_mgenplus_1c_bold"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:layoutDirection="rtl"
                 app:switchPadding="4dp"/>
 
@@ -156,7 +156,7 @@
                     android:layout_height="40dp"
                     android:button="@drawable/custom_radiobutton2"
 
-                    android:text=" 本日　2022年12月24日"
+                    android:text="@{viewModel.alarmDateTodayString}"
                     android:textSize="20sp"
                     android:fontFamily="@font/rounded_mgenplus_1c_bold"
                     android:checked="true"/>
@@ -166,7 +166,7 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="4dp"
                     android:button="@drawable/custom_radiobutton2"
-                    android:text=" 翌日　2022年12月25日"
+                    android:text="@{viewModel.alarmDateTomorrowString}"
                     android:textSize="20sp"
                     android:fontFamily="@font/rounded_mgenplus_1c_bold"
                     android:checked="false"/>
@@ -186,10 +186,11 @@
                     android:layout_height="36dp"
                     android:layout_marginStart="32dp"
                     android:gravity="center|right"
-                    android:text="2022年12月22日 ～ 2022年12月29日"
+                    android:text="@{viewModel.alarmDateOneWeekString}"
                     android:textSize="18sp"
                     android:fontFamily="@font/rounded_mgenplus_1c_bold"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    android:onClick="@{()->viewModel.onOneWeekDateClick()}"/>
                 <RadioButton
                     android:id="@+id/rbPeriod"
                     android:layout_width="wrap_content"
@@ -205,20 +206,48 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginStart="32dp">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:gravity="center|right"
-                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
-                        android:text="開始日　2022年1月1日"
-                        android:textSize="18sp"/>
-                    <TextView
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:gravity="center|right"
+                            android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                            android:textSize="18sp"
+                            android:text="@string/label_period_start"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="16dp"
+                            android:gravity="center|right"
+                            android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                            android:text="@{viewModel.alarmDatePeriodStartString}"
+                            android:textSize="18sp"
+                            android:onClick="@{()->viewModel.onPeriodStartDateClick()}"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:gravity="center|right"
-                        android:fontFamily="@font/rounded_mgenplus_1c_bold"
-                        android:text="終了日　2022年3月31日"
-                        android:textSize="18sp"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:gravity="center|right"
+                            android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                            android:textSize="18sp"
+                            android:text="@string/label_period_end"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="16dp"
+                            android:gravity="center|right"
+                            android:fontFamily="@font/rounded_mgenplus_1c_bold"
+                            android:text="@{viewModel.alarmDatePeriodEndString}"
+                            android:textSize="18sp"
+                            android:onClick="@{()->viewModel.onPeriodEndDateClick()}"/>
+                    </LinearLayout>
                 </LinearLayout>
             </RadioGroup>
 
@@ -229,7 +258,7 @@
                 android:layout_marginStart="16dp"
                 android:text="時刻を指定しての通知"
                 android:fontFamily="@font/rounded_mgenplus_1c_bold"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:layoutDirection="rtl"
                 app:switchPadding="4dp"/>
 
